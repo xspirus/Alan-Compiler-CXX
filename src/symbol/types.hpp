@@ -53,6 +53,7 @@ class Type {
 
         // To be inherited
         virtual int getSize() = 0;
+        virtual TypePtr getRef();
 
         virtual void print() = 0;
 };
@@ -100,11 +101,12 @@ class TypeByte : public Type {
 class TypeArray : public Type {
     private :
         int size;
-        std::unique_ptr<Type> refType;
+        TypePtr refType;
     public :
-        TypeArray(int size, std::unique_ptr<Type> type);
+        TypeArray(int size, TypePtr type);
         virtual ~TypeArray() {  }
         virtual int getSize() override;
+        virtual TypePtr getRef() override;
         virtual void print() override;
 };
 
@@ -114,12 +116,27 @@ class TypeArray : public Type {
 
 class TypeIArray : public Type {
     private :
-        std::unique_ptr<Type> refType;
+        TypePtr refType;
     public :
-        TypeIArray(std::unique_ptr<Type> type);
+        TypeIArray(TypePtr type);
         virtual ~TypeIArray() {  }
         virtual int getSize() override;
+        virtual TypePtr getRef() override;
         virtual void print() override;
 };
+
+/*******************************************************************************
+ ***************************** Auxiliary Functions *****************************
+ *******************************************************************************/
+
+bool equalType(TypePtr a, TypePtr b);
+
+/*******************************************************************************
+ ******************************* Constant Types ********************************
+ *******************************************************************************/
+
+extern TypePtr typeInteger;
+extern TypePtr typeByte;
+extern TypePtr typeVoid;
 
 #endif

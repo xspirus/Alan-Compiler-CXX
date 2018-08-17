@@ -60,12 +60,14 @@ class Entry {
         virtual int getOffset();
         virtual void setOffset(int offset);
         virtual int getReturns();
-        virtual EntryVector getParams();
+        virtual const EntryVector& getParams() const;
+        virtual const EntryVector& getHidden() const;
         virtual PassMode getMode();
         virtual void addParam(EntryPtr param);
+        virtual void addHidden(EntryPtr entry);
         virtual void addReturn();
 
-        virtual void print() = 0;
+        virtual void print(std::string prefix) = 0;
 };
 
 /*******************************************************************************
@@ -84,7 +86,7 @@ class EntryVariable : public Entry {
         int getOffset();
         void setOffset(int offset);
 
-        void print();
+        void print(std::string prefix);
 };
 
 /*******************************************************************************
@@ -96,17 +98,20 @@ class EntryFunction : public Entry {
         // Variables
         int         returns;
         EntryVector params;
+        EntryVector hidden;
 
         // Methods
         EntryFunction(std::string id, TypePtr type);
         virtual ~EntryFunction() {  }
 
         int getReturns();
-        EntryVector getParams();
+        const EntryVector& getParams() const;
+        const EntryVector& getHidden() const;
         void addParam(EntryPtr param);
+        void addHidden(EntryPtr entry);
         void addReturn();
 
-        void print();
+        void print(std::string prefix);
 };
 
 /*******************************************************************************
@@ -127,7 +132,7 @@ class EntryParameter : public Entry {
         void setOffset(int offset);
         PassMode getMode();
 
-        void print();
+        void print(std::string prefix);
 };
 
 #endif

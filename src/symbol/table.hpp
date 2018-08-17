@@ -15,7 +15,6 @@
 
 #include <memory>
 #include <deque>
-#include <stack>
 #include <unordered_map>
 
 #include <symbol/types.hpp>
@@ -26,8 +25,8 @@
  ********************************** Typedefs ***********************************
  *******************************************************************************/
 
-typedef std::stack<ScopePtr> ScopeStack;
-typedef std::stack<EntryPtr> EntryStack;
+typedef std::deque<ScopePtr> ScopeStack;
+typedef std::deque<EntryPtr> EntryStack;
 typedef std::unordered_map<std::string, EntryStack> HashTable;
 
 /*******************************************************************************
@@ -54,6 +53,7 @@ class Table {
         void closeScope();
         TypePtr scopeType();
         void addReturn();
+        void addHidden(EntryPtr entry);
         void insertEntry(EntryPtr entry);
         EntryPtr lookupEntry(std::string id, Lookup l);
 

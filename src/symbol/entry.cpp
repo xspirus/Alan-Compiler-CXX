@@ -36,7 +36,11 @@ int Entry::getReturns() {
     return -1;
 }
 
-EntryVector Entry::getParams() {
+const EntryVector& Entry::getParams() const {
+    error("Not a function");
+}
+
+const EntryVector& Entry::getHidden() const {
     error("Not a function");
 }
 
@@ -46,6 +50,11 @@ PassMode Entry::getMode() {
 }
 
 void Entry::addParam(EntryPtr param) {
+    error("Not a function");
+    return;
+}
+
+void Entry::addHidden(EntryPtr entry) {
     error("Not a function");
     return;
 }
@@ -61,7 +70,7 @@ void Entry::addReturn() {
 
 EntryVariable::EntryVariable(std::string id, TypePtr type) {
     this->id = std::move(id);
-    this->type = std::move(type);
+    this->type = type;
     this->eType = EntryType::VARIABLE;
 }
 
@@ -73,8 +82,8 @@ void EntryVariable::setOffset(int offset) {
     this->offset = offset;
 }
 
-void EntryVariable::print() {
-    std::cout << "Variable : " << this->id << std::endl;
+void EntryVariable::print(std::string prefix) {
+    std::cout << prefix << " Variable : " << this->id << std::endl;
 }
 
 /*******************************************************************************
@@ -83,7 +92,7 @@ void EntryVariable::print() {
 
 EntryFunction::EntryFunction(std::string id, TypePtr type) {
     this->id = std::move(id);
-    this->type = std::move(type);
+    this->type = type;
     this->returns = 0;
     this->eType = EntryType::FUNCTION;
 }
@@ -92,25 +101,38 @@ int EntryFunction::getReturns() {
     return this->returns;
 }
 
-EntryVector EntryFunction::getParams() {
+const EntryVector& EntryFunction::getParams() const {
     return this->params;
+}
+
+const EntryVector& EntryFunction::getHidden() const {
+    return this->hidden;
 }
 
 void EntryFunction::addParam(EntryPtr param) {
     this->params.push_back(param);
 }
 
+void EntryFunction::addHidden(EntryPtr entry) {
+    this->hidden.push_back(entry);
+}
+
 void EntryFunction::addReturn() {
     this->returns++;
 }
 
-void EntryFunction::print() {
-    std::cout << "Function : " << this->id << std::endl;
-    std::cout << "-- with params :" << std::endl;
-    for ( auto p : params ) {
-        std::cout << "---- ";
-        p->print();
-    }
+void EntryFunction::print(std::string prefix) {
+    std::cout << prefix << " Function : " << this->id << std::endl;
+    std::string mid(prefix.size(), ' ');
+    mid += "`-";
+    std::cout << mid << " with parameters :" << std::endl;
+    std::string bot(mid.size(), ' ');
+    bot += "`-";
+    for ( auto p : params )
+        p->print(bot);
+    std::cout << mid << " with hiddens :" << std::endl;
+    for ( auto h : hidden )
+        h->print(bot);
 }
 
 /*******************************************************************************
@@ -118,8 +140,12 @@ void EntryFunction::print() {
  *******************************************************************************/
 
 EntryParameter::EntryParameter(std::string id, TypePtr type, PassMode mode) {
+    if ( type->t == genType::IARRAY 
+            && mode != PassMode::REFERENCE ) {
+        error("Arrays must always be passed by reference");
+    }
     this->id = std::move(id);
-    this->type = std::move(type);
+    this->type = type;
     this->mode = mode;
     this->eType = EntryType::PARAMETER;
 }
@@ -136,6 +162,6 @@ PassMode EntryParameter::getMode() {
     return this->mode;
 }
 
-void EntryParameter::print() {
-    std::cout << "Parameter : " << this->id << std::endl;
+void EntryParameter::print(std::string prefix) {
+    std::cout << prefix << " Parameter : " << this->id << std::endl;
 }

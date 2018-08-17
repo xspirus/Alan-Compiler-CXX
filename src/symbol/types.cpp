@@ -16,6 +16,14 @@
 #include <error/error.hpp>
 
 /*******************************************************************************
+ *********************************** General ***********************************
+ *******************************************************************************/
+
+TypePtr Type::getRef() {
+    return nullptr;
+}
+
+/*******************************************************************************
  ************************************ VOID *************************************
  *******************************************************************************/
 
@@ -68,16 +76,20 @@ void TypeByte::print() {
  ************************************ ARRAY ************************************
  *******************************************************************************/
 
-TypeArray::TypeArray(int size, std::unique_ptr<Type> type) {
+TypeArray::TypeArray(int size, TypePtr type) {
     if (type->t == genType::VOID)
         error("Array cannot be of type void");
     this->t = genType::ARRAY;
     this->size = size;
-    this->refType = std::move(type);
+    this->refType = type;
 }
 
 int TypeArray::getSize() {
     return ( this->size * refType->getSize() );
+}
+
+TypePtr TypeArray::getRef() {
+    return this->refType;
 }
 
 void TypeArray::print() {
@@ -90,15 +102,19 @@ void TypeArray::print() {
  *********************************** IARRAY ************************************
  *******************************************************************************/
 
-TypeIArray::TypeIArray(std::unique_ptr<Type> type) {
+TypeIArray::TypeIArray(TypePtr type) {
     if (type->t == genType::VOID)
         error("Array cannot be of type void");
     this->t = genType::IARRAY;
-    this->refType = std::move(type);
+    this->refType = type;
 }
 
 int TypeIArray::getSize() {
     return INT_SIZE;
+}
+
+TypePtr TypeIArray::getRef() {
+    return this->refType;
 }
 
 void TypeIArray::print() {
@@ -106,3 +122,31 @@ void TypeIArray::print() {
     refType->print();
     std::cout << "[]";
 }
+
+/*******************************************************************************
+ ***************************** Auxiliary Functions *****************************
+ *******************************************************************************/
+
+bool equalType(TypePtr a, TypePtr b) {
+    if ( a == b )
+        return true;
+
+    if ( a->t == b->t ) {
+        switch( a->t ) {
+            case genType::ARRAY :
+                if ( a->getSize() != b->getSize() )
+                    return false;
+            case genType::IARRAY :
+                return equalType(a->getRef(), b->getRef());
+        }
+    }
+    return false;
+}
+
+/*******************************************************************************
+ ******************************* Constant Types ********************************
+ *******************************************************************************/
+
+TypePtr typeInteger = std::make_shared<TypeInt>();
+TypePtr typeByte = std::make_shared<TypeByte>();
+TypePtr typeVoid = std::make_shared<TypeVoid>();
