@@ -12,7 +12,7 @@
 
 #include <symbol/scope.hpp>
 
-using namespace sem;
+namespace sem {
 
 /*******************************************************************************
  ************************************ Scope ************************************
@@ -27,3 +27,5 @@ Scope::Scope(unsigned int nestingLevel, EntryPtr fun) {
 EntryPtr Scope::getFunction() {
     return fun;
 }
+
+} // end namespace sem

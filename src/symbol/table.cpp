@@ -16,7 +16,7 @@
 #include <error/error.hpp>
 #include <symbol/table.hpp>
 
-using namespace sem;
+namespace sem {
 
 /*******************************************************************************
  ******************************** Symbol Table *********************************
@@ -118,3 +118,5 @@ EntryPtr Table::lookupEntry(std::string id, Lookup l) {
 ScopePtr Table::getScope() {
     return scopes.front();
 }
+
+} // end namespace sem

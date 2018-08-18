@@ -18,7 +18,7 @@
 #include <symbol/types.hpp>
 #include <symbol/entry.hpp>
 
-using namespace sem;
+namespace sem {
 
 /*******************************************************************************
  ************************** General Class For Errors ***************************
@@ -167,3 +167,5 @@ PassMode EntryParameter::getMode() {
 void EntryParameter::print(std::string prefix) {
     std::cout << prefix << " Parameter : " << this->id << std::endl;
 }
+
+} // end namespace sem

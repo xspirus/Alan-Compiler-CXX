@@ -12,7 +12,7 @@
 
 #include <ast/ast.hpp>
 
-using namespace ast;
+namespace ast {
 
 /*******************************************************************************
  *********************************** General ***********************************
@@ -165,3 +165,5 @@ Func::Func(std::string id, astVec params, sem::TypePtr type, astVec decls, astPt
 Block::Block(astVec stmts) : Node() {
     this->stmts = std::move(stmts);
 }
+
+} // end namespace ast
