@@ -1,52 +1,52 @@
 [
     {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Project/src/ -o build/types.o src/symbol/types.cpp",
-        "directory": "/home/spirus/Documents/Project",
-        "file": "/home/spirus/Documents/Project/src/symbol/types.cpp"
+        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/types.o src/symbol/types.cpp",
+        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
+        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/types.cpp"
     },
     {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Project/src/ -o build/table.o src/symbol/table.cpp",
-        "directory": "/home/spirus/Documents/Project",
-        "file": "/home/spirus/Documents/Project/src/symbol/table.cpp"
+        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/table.o src/symbol/table.cpp",
+        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
+        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/table.cpp"
     },
     {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Project/src/ -o build/scope.o src/symbol/scope.cpp",
-        "directory": "/home/spirus/Documents/Project",
-        "file": "/home/spirus/Documents/Project/src/symbol/scope.cpp"
+        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/scope.o src/symbol/scope.cpp",
+        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
+        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/scope.cpp"
     },
     {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Project/src/ -o build/entry.o src/symbol/entry.cpp",
-        "directory": "/home/spirus/Documents/Project",
-        "file": "/home/spirus/Documents/Project/src/symbol/entry.cpp"
+        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/entry.o src/symbol/entry.cpp",
+        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
+        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/entry.cpp"
     },
     {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Project/src/ -o build/fix.o src/fix/fix.cpp",
-        "directory": "/home/spirus/Documents/Project",
-        "file": "/home/spirus/Documents/Project/src/fix/fix.cpp"
+        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/fix.o src/fix/fix.cpp",
+        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
+        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/fix/fix.cpp"
     },
     {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Project/src/ -o build/error.o src/error/error.cpp",
-        "directory": "/home/spirus/Documents/Project",
-        "file": "/home/spirus/Documents/Project/src/error/error.cpp"
+        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/error.o src/error/error.cpp",
+        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
+        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/error/error.cpp"
     },
     {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Project/src/ -o build/ast.o src/ast/ast.cpp",
-        "directory": "/home/spirus/Documents/Project",
-        "file": "/home/spirus/Documents/Project/src/ast/ast.cpp"
+        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/ast.o src/ast/ast.cpp",
+        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
+        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/ast/ast.cpp"
     },
     {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Project/src/ -o build/parser.o src/parser/parser.cpp",
-        "directory": "/home/spirus/Documents/Project",
-        "file": "/home/spirus/Documents/Project/src/parser/parser.cpp"
+        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/parser.o src/parser/parser.cpp",
+        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
+        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/parser/parser.cpp"
     },
     {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Project/src/ -o build/lexer.o src/lexer/lexer.cpp",
-        "directory": "/home/spirus/Documents/Project",
-        "file": "/home/spirus/Documents/Project/src/lexer/lexer.cpp"
+        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/lexer.o src/lexer/lexer.cpp",
+        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
+        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/lexer/lexer.cpp"
     },
     {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Project/src/ -o build/main.o main.cpp",
-        "directory": "/home/spirus/Documents/Project",
-        "file": "/home/spirus/Documents/Project/main.cpp"
+        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/main.o main.cpp",
+        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
+        "file": "/home/spirus/Documents/Alan-Compiler-CXX/main.cpp"
     }
 ]

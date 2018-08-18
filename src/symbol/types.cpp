@@ -15,6 +15,8 @@
 #include <symbol/types.hpp>
 #include <error/error.hpp>
 
+using namespace sem;
+
 /*******************************************************************************
  *********************************** General ***********************************
  *******************************************************************************/
@@ -127,7 +129,7 @@ void TypeIArray::print() {
  ***************************** Auxiliary Functions *****************************
  *******************************************************************************/
 
-bool equalType(TypePtr a, TypePtr b) {
+bool sem::equalType(TypePtr a, TypePtr b) {
     if ( a == b )
         return true;
 
@@ -137,7 +139,7 @@ bool equalType(TypePtr a, TypePtr b) {
                 if ( a->getSize() != b->getSize() )
                     return false;
             case genType::IARRAY :
-                return equalType(a->getRef(), b->getRef());
+                return sem::equalType(a->getRef(), b->getRef());
         }
     }
     return false;
@@ -147,6 +149,6 @@ bool equalType(TypePtr a, TypePtr b) {
  ******************************* Constant Types ********************************
  *******************************************************************************/
 
-TypePtr typeInteger = std::make_shared<TypeInt>();
-TypePtr typeByte = std::make_shared<TypeByte>();
-TypePtr typeVoid = std::make_shared<TypeVoid>();
+TypePtr sem::typeInteger = std::make_shared<TypeInt>();
+TypePtr sem::typeByte    = std::make_shared<TypeByte>();
+TypePtr sem::typeVoid    = std::make_shared<TypeVoid>();

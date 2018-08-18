@@ -21,7 +21,7 @@
 
 using namespace std;
 
-extern ast parse();
+extern ast::astPtr parse();
 
 const char * filename = "TEST";
 

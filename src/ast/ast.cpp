@@ -12,11 +12,13 @@
 
 #include <ast/ast.hpp>
 
+using namespace ast;
+
 /*******************************************************************************
  *********************************** General ***********************************
  *******************************************************************************/
 
-NodeAST::NodeAST() {
+Node::Node() {
     this->line = linecount;
 }
 
@@ -24,8 +26,8 @@ NodeAST::NodeAST() {
  ****************************** Integer Constants ******************************
  *******************************************************************************/
 
-IntAST::IntAST(int val) : NodeAST() {
-    this->type = typeInteger;
+Int::Int(int val) : Node() {
+    this->type = sem::typeInteger;
     this->val  = val;
 }
 
@@ -33,8 +35,8 @@ IntAST::IntAST(int val) : NodeAST() {
  ******************************* Byte Constants ********************************
  *******************************************************************************/
 
-ByteAST::ByteAST(unsigned char b) : NodeAST() {
-    this->type = typeByte;
+Byte::Byte(unsigned char b) : Node() {
+    this->type = sem::typeByte;
     this->b    = b;
 }
 
@@ -42,8 +44,8 @@ ByteAST::ByteAST(unsigned char b) : NodeAST() {
  ******************************* String Literals *******************************
  *******************************************************************************/
 
-StringAST::StringAST(std::string s) : NodeAST() {
-    this->type = std::make_shared<TypeArray>(s.size() + 1, typeByte);
+String::String(std::string s) : Node() {
+    this->type = std::make_shared<sem::TypeArray>(s.size() + 1, sem::typeByte);
     this->s    = s;
 }
 
@@ -51,7 +53,7 @@ StringAST::StringAST(std::string s) : NodeAST() {
  ********************************** Variables **********************************
  *******************************************************************************/
 
-VarAST::VarAST(std::string id, ast index) : NodeAST() {
+Var::Var(std::string id, astPtr index) : Node() {
     this->id    = id;
     this->index = index;
 }
@@ -60,7 +62,7 @@ VarAST::VarAST(std::string id, ast index) : NodeAST() {
  ****************************** Binary Operators *******************************
  *******************************************************************************/
 
-BinOpAST::BinOpAST(char op, ast left, ast right) : NodeAST() {
+BinOp::BinOp(char op, astPtr left, astPtr right) : Node() {
     this->op    = op;
     this->type  = left->type;
     this->left  = left;
@@ -71,8 +73,8 @@ BinOpAST::BinOpAST(char op, ast left, ast right) : NodeAST() {
  ********************************* Conditions **********************************
  *******************************************************************************/
 
-CondAST::CondAST(Cond op, ast left, ast right) : NodeAST() {
-    this->type  = typeByte;
+Condition::Condition(Cond op, astPtr left, astPtr right) : Node() {
+    this->type  = sem::typeByte;
     this->op    = op;
     this->left  = left;
     this->right = right;
@@ -82,7 +84,7 @@ CondAST::CondAST(Cond op, ast left, ast right) : NodeAST() {
  *********************************** IfElse ************************************
  *******************************************************************************/
 
-IfElseAST::IfElseAST(ast cond, ast ifBody, ast elseBody) : NodeAST() {
+IfElse::IfElse(astPtr cond, astPtr ifBody, astPtr elseBody) : Node() {
     this->cond     = cond;
     this->ifBody   = ifBody;
     this->elseBody = elseBody;
@@ -92,7 +94,7 @@ IfElseAST::IfElseAST(ast cond, ast ifBody, ast elseBody) : NodeAST() {
  ************************************ While ************************************
  *******************************************************************************/
 
-WhileAST::WhileAST(ast cond, ast body) : NodeAST() {
+While::While(astPtr cond, astPtr body) : Node() {
     this->cond = cond;
     this->body = body;
 }
@@ -101,7 +103,7 @@ WhileAST::WhileAST(ast cond, ast body) : NodeAST() {
  ******************************** Function Call ********************************
  *******************************************************************************/
 
-CallAST::CallAST(std::string id, astVec params) : NodeAST() {
+Call::Call(std::string id, astVec params) : Node() {
     this->id     = id;
     this->params = std::move(params);
 }
@@ -110,7 +112,7 @@ CallAST::CallAST(std::string id, astVec params) : NodeAST() {
  ****************************** Function Returns *******************************
  *******************************************************************************/
 
-RetAST::RetAST(ast expr) : NodeAST() {
+Ret::Ret(astPtr expr) : Node() {
     this->type = expr->type;
     this->expr = expr;
 }
@@ -119,7 +121,7 @@ RetAST::RetAST(ast expr) : NodeAST() {
  ********************************* Assignments *********************************
  *******************************************************************************/
 
-AssignAST::AssignAST(ast left, ast right) : NodeAST() {
+Assign::Assign(astPtr left, astPtr right) : Node() {
     this->type  = left->type;
     this->left  = left;
     this->right = right;
@@ -129,7 +131,7 @@ AssignAST::AssignAST(ast left, ast right) : NodeAST() {
  **************************** Variable Declarations ****************************
  *******************************************************************************/
 
-VarDeclAST::VarDeclAST(std::string id, TypePtr type) : NodeAST() {
+VarDecl::VarDecl(std::string id, sem::TypePtr type) : Node() {
     this->type = type;
     this->id   = id;
 }
@@ -138,7 +140,7 @@ VarDeclAST::VarDeclAST(std::string id, TypePtr type) : NodeAST() {
  ********************************* Parameters **********************************
  *******************************************************************************/
 
-ParamAST::ParamAST(std::string id, PassMode mode, TypePtr type) : NodeAST() {
+Param::Param(std::string id, sem::PassMode mode, sem::TypePtr type) : Node() {
     this->type = type;
     this->id   = id;
     this->mode = mode;
@@ -148,7 +150,7 @@ ParamAST::ParamAST(std::string id, PassMode mode, TypePtr type) : NodeAST() {
  ********************************** Functions **********************************
  *******************************************************************************/
 
-FuncAST::FuncAST(std::string id, astVec params, TypePtr type, astVec decls, ast body) : NodeAST() {
+Func::Func(std::string id, astVec params, sem::TypePtr type, astVec decls, astPtr body) : Node() {
     this->type   = type;
     this->id     = id;
     this->params = std::move(params);
@@ -160,6 +162,6 @@ FuncAST::FuncAST(std::string id, astVec params, TypePtr type, astVec decls, ast 
  ***************************** Compound Statements *****************************
  *******************************************************************************/
 
-BlockAST::BlockAST(astVec stmts) : NodeAST() {
+Block::Block(astVec stmts) : Node() {
     this->stmts = std::move(stmts);
 }

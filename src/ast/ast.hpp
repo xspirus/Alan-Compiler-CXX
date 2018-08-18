@@ -19,16 +19,18 @@
 #include <symbol/types.hpp>
 #include <symbol/entry.hpp>
 
+extern int linecount;
+
+namespace ast {
+
 /*******************************************************************************
  ********************************** Typedefs ***********************************
  *******************************************************************************/
 
-class NodeAST;
+class Node;
 
-typedef std::shared_ptr<NodeAST> ast;
-typedef std::vector<ast>         astVec;
-
-extern int linecount;
+typedef std::shared_ptr<Node> astPtr;
+typedef std::vector<astPtr>   astVec;
 
 /*******************************************************************************
  *************************** Conditions enumeration ****************************
@@ -50,209 +52,211 @@ enum class Cond {
  ************************* Parent Class for All Nodes **************************
  *******************************************************************************/
 
-class NodeAST {
+class Node {
     public :
-        TypePtr type;
+        sem::TypePtr type;
         int     line;
 
-        NodeAST();
-        virtual ~NodeAST() = default;
+        Node();
+        virtual ~Node() = default;
 };
 
 /*******************************************************************************
  ****************************** Integer Constants ******************************
  *******************************************************************************/
 
-class IntAST : public NodeAST {
+class Int : public Node {
     public :
         int val;
 
-        IntAST(int val);
-        virtual ~IntAST() = default;
+        Int(int val);
+        virtual ~Int() = default;
 };
 
 /*******************************************************************************
  ******************************* Byte Constants ********************************
  *******************************************************************************/
 
-class ByteAST : public NodeAST {
+class Byte : public Node {
     public :
         unsigned char b;
 
-        ByteAST(unsigned char b);
-        virtual ~ByteAST() = default;
+        Byte(unsigned char b);
+        virtual ~Byte() = default;
 };
 
 /*******************************************************************************
  ******************************* String Literals *******************************
  *******************************************************************************/
 
-class StringAST : public NodeAST {
+class String : public Node {
     public :
         std::string s;
 
-        StringAST(std::string s);
-        virtual ~StringAST() = default;
+        String(std::string s);
+        virtual ~String() = default;
 };
 
 /*******************************************************************************
  ********************************** Variables **********************************
  *******************************************************************************/
 
-class VarAST : public NodeAST {
+class Var : public Node {
     public :
         std::string id;
-        ast index;
+        astPtr      index;
 
-        VarAST(std::string id, ast index);
-        virtual ~VarAST() = default;
+        Var(std::string id, astPtr index);
+        virtual ~Var() = default;
 };
 
 /*******************************************************************************
  ****************************** Binary Operations ******************************
  *******************************************************************************/
 
-class BinOpAST : public NodeAST {
+class BinOp : public Node {
     public :
-        char op;
-        ast  left;
-        ast  right;
+        char   op;
+        astPtr left;
+        astPtr right;
 
-        BinOpAST(char op, ast left, ast right);
-        virtual ~BinOpAST() = default;
+        BinOp(char op, astPtr left, astPtr right);
+        virtual ~BinOp() = default;
 };
 
 /*******************************************************************************
  ********************************* Conditions **********************************
  *******************************************************************************/
 
-class CondAST : public NodeAST {
+class Condition : public Node {
     public :
-        Cond op;
-        ast  left;
-        ast  right;
+        Cond   op;
+        astPtr left;
+        astPtr right;
 
-        CondAST(Cond op, ast left, ast right);
-        virtual ~CondAST() = default;
+        Condition(Cond op, astPtr left, astPtr right);
+        virtual ~Condition() = default;
 };
 
 /*******************************************************************************
  *********************************** IfElse ************************************
  *******************************************************************************/
 
-class IfElseAST : public NodeAST {
+class IfElse : public Node {
     public :
-        ast cond;
-        ast ifBody;
-        ast elseBody;
+        astPtr cond;
+        astPtr ifBody;
+        astPtr elseBody;
 
-        IfElseAST(ast cond, ast ifBody, ast elseBody);
-        virtual ~IfElseAST() = default;
+        IfElse(astPtr cond, astPtr ifBody, astPtr elseBody);
+        virtual ~IfElse() = default;
 };
 
 /*******************************************************************************
  ************************************ While ************************************
  *******************************************************************************/
 
-class WhileAST : public NodeAST {
+class While : public Node {
     public :
-        ast cond;
-        ast body;
+        astPtr cond;
+        astPtr body;
 
-        WhileAST(ast cond, ast body);
-        virtual ~WhileAST() = default;
+        While(astPtr cond, astPtr body);
+        virtual ~While() = default;
 };
 
 /*******************************************************************************
  ******************************** Function Call ********************************
  *******************************************************************************/
 
-class CallAST : public NodeAST {
+class Call : public Node {
     public :
         std::string id;
-        astVec params;
-        astVec hidden;
+        astVec      params;
+        astVec      hidden;
 
-        CallAST(std::string id, astVec params);
-        virtual ~CallAST() = default;
+        Call(std::string id, astVec params);
+        virtual ~Call() = default;
 };
 
 /*******************************************************************************
  ****************************** Function Returns *******************************
  *******************************************************************************/
 
-class RetAST : public NodeAST {
+class Ret : public Node {
     public :
-        ast expr;
+        astPtr expr;
 
-        RetAST(ast expr);
-        virtual ~RetAST() = default;
+        Ret(astPtr expr);
+        virtual ~Ret() = default;
 };
 
 /*******************************************************************************
  ********************************* Assignments *********************************
  *******************************************************************************/
 
-class AssignAST : public NodeAST {
+class Assign : public Node {
     public :
-        ast left;
-        ast right;
+        astPtr left;
+        astPtr right;
 
-        AssignAST(ast left, ast right);
-        virtual ~AssignAST() = default;
+        Assign(astPtr left, astPtr right);
+        virtual ~Assign() = default;
 };
 
 /*******************************************************************************
  **************************** Variable Declarations ****************************
  *******************************************************************************/
 
-class VarDeclAST : public NodeAST {
+class VarDecl : public Node {
     public :
         std::string id;
 
-        VarDeclAST(std::string id, TypePtr type);
-        virtual ~VarDeclAST() = default;
+        VarDecl(std::string id, sem::TypePtr type);
+        virtual ~VarDecl() = default;
 };
 
 /*******************************************************************************
  ********************************* Parameters **********************************
  *******************************************************************************/
 
-class ParamAST : public NodeAST {
+class Param : public Node {
     public :
         std::string id;
-        PassMode mode;
+        sem::PassMode    mode;
 
-        ParamAST(std::string id, PassMode mode, TypePtr type);
-        virtual ~ParamAST() = default;
+        Param(std::string id, sem::PassMode mode, sem::TypePtr type);
+        virtual ~Param() = default;
 };
 
 /*******************************************************************************
  ********************************** Functions **********************************
  *******************************************************************************/
 
-class FuncAST : public NodeAST {
+class Func : public Node {
     public :
         std::string id;
-        astVec params;
-        astVec hidden;
-        astVec decls;
-        ast body;
+        astVec      params;
+        astVec      hidden;
+        astVec      decls;
+        astPtr      body;
 
-        FuncAST(std::string id, astVec params, TypePtr type, astVec decls, ast body);
-        virtual ~FuncAST() = default;
+        Func(std::string id, astVec params, sem::TypePtr type, astVec decls, astPtr body);
+        virtual ~Func() = default;
 };
 
 /*******************************************************************************
  ***************************** Compound Statements *****************************
  *******************************************************************************/
 
-class BlockAST : public NodeAST {
+class Block : public Node {
     public :
         astVec stmts;
 
-        BlockAST(astVec stmts);
-        virtual ~BlockAST() = default;
+        Block(astVec stmts);
+        virtual ~Block() = default;
 };
+
+} // namespace ast end
 
 #endif

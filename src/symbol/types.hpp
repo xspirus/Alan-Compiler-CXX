@@ -13,8 +13,9 @@
 #ifndef __TYPES_HPP__
 #define __TYPES_HPP__
 
-#include <cstdlib>
 #include <memory>
+
+namespace sem {
 
 #define INT_SIZE 4
 #define BYTE_SIZE 1
@@ -138,5 +139,7 @@ bool equalType(TypePtr a, TypePtr b);
 extern TypePtr typeInteger;
 extern TypePtr typeByte;
 extern TypePtr typeVoid;
+
+} // end namespace sem
 
 #endif
