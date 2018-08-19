@@ -28,9 +28,6 @@ void Table::openScope(EntryPtr fun) {
         nestingLevel = 1;
     else
         nestingLevel = scopes.front()->nestingLevel + 1;
-    std::cout << "Opening scope of function \"" << fun->id << "\"" << std::endl;
-    std::cout << "-- Nesting Level : " << nestingLevel << std::endl;
-    std::cout << "-- Return Type : "; fun->type->print(); std::cout << std::endl;
     scopes.push_front(std::make_shared<Scope>(nestingLevel, fun));
 }
 

@@ -25,6 +25,10 @@ TypePtr Type::getRef() {
     return nullptr;
 }
 
+std::ostream& operator<<(std::ostream &out, const Type &t) {
+    return t.print(out);
+}
+
 /*******************************************************************************
  ************************************ VOID *************************************
  *******************************************************************************/
@@ -38,8 +42,9 @@ int TypeVoid::getSize() {
     return -1;
 }
 
-void TypeVoid::print() {
-    std::cout << "Void";
+std::ostream &TypeVoid::print(std::ostream &out) const {
+    out << "void";
+    return out;
 }
 
 /*******************************************************************************
@@ -54,8 +59,9 @@ int TypeInt::getSize() {
     return INT_SIZE;
 }
 
-void TypeInt::print() {
-    std::cout << "Int";
+std::ostream &TypeInt::print(std::ostream &out) const {
+    out << "integer";
+    return out;
 }
 
 /*******************************************************************************
@@ -70,8 +76,9 @@ int TypeByte::getSize() {
     return BYTE_SIZE;
 }
 
-void TypeByte::print() {
-    std::cout << "Byte";
+std::ostream &TypeByte::print(std::ostream &out) const {
+    out << "byte";
+    return out;
 }
 
 /*******************************************************************************
@@ -94,10 +101,9 @@ TypePtr TypeArray::getRef() {
     return this->refType;
 }
 
-void TypeArray::print() {
-    std::cout << "Array of ";
-    refType->print();
-    std::cout << "[" << size << "]";
+std::ostream &TypeArray::print(std::ostream &out) const {
+    out << "array of " << *refType << "[" << size << "]";
+    return out;
 }
 
 /*******************************************************************************
@@ -119,10 +125,9 @@ TypePtr TypeIArray::getRef() {
     return this->refType;
 }
 
-void TypeIArray::print() {
-    std::cout << "Array of ";
-    refType->print();
-    std::cout << "[]";
+std::ostream &TypeIArray::print(std::ostream &out) const {
+    out << "iarray of " << *refType << "[]";
+    return out;
 }
 
 /*******************************************************************************
