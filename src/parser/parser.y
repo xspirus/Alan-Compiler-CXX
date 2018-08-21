@@ -9,7 +9,7 @@
 #include <ast/ast.hpp>
 
 template<typename T, typename ... Args>
-std::shared_ptr<T> SHARED(Args ... args) {
+inline std::shared_ptr<T> SHARED(Args ... args) {
    return std::make_shared<T>(args...);
 }
 
