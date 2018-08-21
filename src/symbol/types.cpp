@@ -150,6 +150,22 @@ bool equalType(TypePtr a, TypePtr b) {
     return false;
 }
 
+bool compatibleType(TypePtr a, TypePtr b) {
+    if ( a == b )
+        return true;
+
+    if ( a->t == b->t )
+        return true;
+
+    if ( (a->t == genType::ARRAY && b->t == genType::IARRAY) 
+            || (a->t == genType::IARRAY && b->t == genType::ARRAY)
+       ) {
+        return compatibleType(a->getRef(), b->getRef());
+    }
+
+    return false;
+}
+
 /*******************************************************************************
  ******************************* Constant Types ********************************
  *******************************************************************************/
