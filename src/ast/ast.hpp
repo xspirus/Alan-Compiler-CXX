@@ -18,6 +18,7 @@
 
 #include <symbol/types.hpp>
 #include <symbol/entry.hpp>
+#include <symbol/table.hpp>
 
 extern int linecount;
 
@@ -59,6 +60,8 @@ class Node {
 
         Node();
         virtual ~Node() = default;
+
+        virtual void semantic(sem::SymbolTable symtable) = 0;
 };
 
 /*******************************************************************************
@@ -71,6 +74,8 @@ class Int : public Node {
 
         Int(int val);
         virtual ~Int() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -83,6 +88,8 @@ class Byte : public Node {
 
         Byte(unsigned char b);
         virtual ~Byte() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -95,6 +102,8 @@ class String : public Node {
 
         String(std::string s);
         virtual ~String() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -108,6 +117,8 @@ class Var : public Node {
 
         Var(std::string id, astPtr index);
         virtual ~Var() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -122,6 +133,8 @@ class BinOp : public Node {
 
         BinOp(char op, astPtr left, astPtr right);
         virtual ~BinOp() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -136,6 +149,8 @@ class Condition : public Node {
 
         Condition(Cond op, astPtr left, astPtr right);
         virtual ~Condition() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -150,6 +165,8 @@ class IfElse : public Node {
 
         IfElse(astPtr cond, astPtr ifBody, astPtr elseBody);
         virtual ~IfElse() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -163,6 +180,8 @@ class While : public Node {
 
         While(astPtr cond, astPtr body);
         virtual ~While() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -177,6 +196,8 @@ class Call : public Node {
 
         Call(std::string id, astVec params);
         virtual ~Call() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -189,6 +210,8 @@ class Ret : public Node {
 
         Ret(astPtr expr);
         virtual ~Ret() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -202,6 +225,8 @@ class Assign : public Node {
 
         Assign(astPtr left, astPtr right);
         virtual ~Assign() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -214,6 +239,8 @@ class VarDecl : public Node {
 
         VarDecl(std::string id, sem::TypePtr type);
         virtual ~VarDecl() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -222,11 +249,13 @@ class VarDecl : public Node {
 
 class Param : public Node {
     public :
-        std::string id;
-        sem::PassMode    mode;
+        std::string   id;
+        sem::PassMode mode;
 
         Param(std::string id, sem::PassMode mode, sem::TypePtr type);
         virtual ~Param() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -243,6 +272,8 @@ class Func : public Node {
 
         Func(std::string id, astVec params, sem::TypePtr type, astVec decls, astPtr body);
         virtual ~Func() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
 
 /*******************************************************************************
@@ -255,7 +286,15 @@ class Block : public Node {
 
         Block(astVec stmts);
         virtual ~Block() = default;
+
+        void semantic(sem::SymbolTable symtable) override;
 };
+
+/*******************************************************************************
+ ***************************** Semantic & Compile ******************************
+ *******************************************************************************/
+
+void semantic(astPtr root);
 
 } // namespace ast end
 

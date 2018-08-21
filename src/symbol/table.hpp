@@ -53,15 +53,21 @@ class Table {
         // Methods
         void openScope(EntryPtr fun);
         void closeScope();
+        void addLibs();
         TypePtr scopeType();
         void addReturn();
+        void addParam(EntryPtr entry);
         void addHidden(EntryPtr entry);
         void insertEntry(EntryPtr entry);
-        EntryPtr lookupEntry(std::string id, Lookup l);
+        EntryPtr lookupEntry(std::string id, Lookup l, bool err);
 
         ScopePtr getScope();
 };
 
-}
+typedef std::shared_ptr<Table> SymbolTable;
+
+SymbolTable initSymbolTable();
+
+} // end namespace sem
 
 #endif

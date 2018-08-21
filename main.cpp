@@ -26,6 +26,7 @@ const char * filename = "TEST";
 extern ast::astPtr parse();
 
 int main() {
-    auto _t = parse();
+    auto root = parse();
+    ast::semantic(root);
     return 0;
 }
