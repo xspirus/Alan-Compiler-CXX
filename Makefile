@@ -1,6 +1,6 @@
 # COMPILER #
 CXX := clang++
-CXXFLAGS := -std=c++14 -Wall -O3 -g
+CXXFLAGS := -std=c++14 -Wall -O3 -g# -DDEBUG
 LIBS := -lfl
 
 # SOURCE FILE EXTENSION
@@ -61,7 +61,7 @@ all: $(BIN_DIR)/$(EXE)
 
 $(BIN_DIR)/$(EXE): $(OBJECTS)
 	@echo "Linking : $@ with objects $(OBJECTS)"
-	$(CXX) $(OBJECTS) -o $@ $(LIBS)
+	$(CXX) $(CXXFLAGS) $(OBJECTS) -o $@ $(LIBS)
 
 $(BUILD_DIR)/%.o: %.$(SRC_EXT)
 	@echo "Compiling : $< --> $@"
