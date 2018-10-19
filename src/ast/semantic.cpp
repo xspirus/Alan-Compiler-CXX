@@ -10,11 +10,14 @@
  *                                                                             *
  *******************************************************************************/
 
-#include <error/error.hpp>
+// #include <error/error.hpp>
+#include <message/message.hpp>
 #include <ast/ast.hpp>
 
 #include <iostream>
 #include <vector>
+
+Debugger debugger;
 
 namespace ast {
 
@@ -23,7 +26,9 @@ namespace ast {
  *******************************************************************************/
 
 void Int::semantic(sem::SymbolTable symtable) {
-    std::cerr << "Found an integer" << std::endl;
+    debugger.newLevel();
+    debugger.show("<Integer>\n");
+    debugger.restoreLevel();
     return;
 }
 
@@ -32,7 +37,9 @@ void Int::semantic(sem::SymbolTable symtable) {
  *******************************************************************************/
 
 void Byte::semantic(sem::SymbolTable symtable) {
-    std::cerr << "Found a byte" << std::endl;
+    debugger.newLevel();
+    debugger.show("<Byte>");
+    debugger.restoreLevel();
     return;
 }
 
@@ -41,7 +48,9 @@ void Byte::semantic(sem::SymbolTable symtable) {
  *******************************************************************************/
 
 void String::semantic(sem::SymbolTable symtable) {
-    std::cerr << "Found a string literal" << std::endl;
+    debugger.newLevel();
+    debugger.show("<String Literal>");
+    debugger.restoreLevel();
     return;
 }
 
@@ -417,9 +426,6 @@ void Block::semantic(sem::SymbolTable symtable) {
  *******************************************************************************/
 
 void semantic(astPtr root) {
-#ifndef DEBUG
-    std::cerr.setstate(std::ios_base::failbit);
-#endif
     std::cerr << "Preparing for semantic analysis..." << std::endl;
     auto symtable = sem::initSymbolTable();
     root->semantic(symtable);

@@ -1,6 +1,6 @@
 # COMPILER #
 CXX := clang++
-CXXFLAGS := -std=c++14 -Wall -O3 -g# -DDEBUG
+CXXFLAGS := -std=c++14 -Wall -O3 -g -DDEBUG
 LIBS := -lfl
 
 # SOURCE FILE EXTENSION
