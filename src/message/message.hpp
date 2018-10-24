@@ -67,7 +67,7 @@ void warning(Args ... args) {
 
 template<typename ... Args>
 void debug(Args ... args) {
-#ifndef DEBUG
+#ifndef NDEBUG
     display(args...);
 #endif
 }
@@ -81,8 +81,10 @@ class Debugger {
         void restoreLevel();
         template<typename ... Args>
             void show(Args ... args){
+#ifndef NDEBUG
                 std::cerr << this->prefix;
                 display(args...);
+#endif
             }
 };
 

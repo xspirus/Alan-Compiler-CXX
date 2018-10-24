@@ -17,9 +17,15 @@
 #include <iostream>
 #include <vector>
 
-Debugger debugger;
+static Debugger debugger;
 
 namespace ast {
+
+static bool first = true;
+
+void Node::fixCalls(astVecMap &hiddenMap) {
+    return;
+}
 
 /*******************************************************************************
  ****************************** Integer Constants ******************************
@@ -38,7 +44,7 @@ void Int::semantic(sem::SymbolTable symtable) {
 
 void Byte::semantic(sem::SymbolTable symtable) {
     debugger.newLevel();
-    debugger.show("<Byte>");
+    debugger.show("<Byte>\n");
     debugger.restoreLevel();
     return;
 }
@@ -49,7 +55,7 @@ void Byte::semantic(sem::SymbolTable symtable) {
 
 void String::semantic(sem::SymbolTable symtable) {
     debugger.newLevel();
-    debugger.show("<String Literal>");
+    debugger.show("<String Literal>\n");
     debugger.restoreLevel();
     return;
 }
@@ -60,13 +66,13 @@ void String::semantic(sem::SymbolTable symtable) {
 
 void Var::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
-    std::cerr << "Found variable " << this->id << " usage" << std::endl;
-    std::cerr << "Performing semantic analysis..." << std::endl;
+    debugger.newLevel();
+    debugger.show("<Var>\n");
     /* Array Variable */
     if ( this->index != nullptr ) {
         this->index->semantic(symtable);
         if ( !sem::equalType(this->index->type, sem::typeInteger) ) {
-            error("Array index must be of integer type");
+            error("Array index must be of integer type\n");
             return;
         }
     }
@@ -75,7 +81,7 @@ void Var::semantic(sem::SymbolTable symtable) {
      */
     auto entry = symtable->lookupEntry(this->id, sem::Lookup::ALL, true);
     if ( entry->eType == sem::EntryType::FUNCTION ) {
-        error("Not a variable/parameter");
+        error("Not a variable/parameter\n");
         return;
     }
     /**
@@ -95,12 +101,7 @@ void Var::semantic(sem::SymbolTable symtable) {
     } else {
         this->type = entry->type->getRef();
     }
-    std::cerr << "Inferenced type of variable "
-              << this->id
-              << " : "
-              << *(this->type)
-              << std::endl;
-    return;
+    debugger.restoreLevel();
 }
 
 /*******************************************************************************
@@ -109,8 +110,8 @@ void Var::semantic(sem::SymbolTable symtable) {
 
 void BinOp::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
-    std::cerr << "Found an operation" << std::endl;
-    std::cerr << "Performing semantic analysis..." << std::endl;
+    debugger.newLevel();
+    debugger.show("<BinOp>\n");
     /**
      * Perform semantic analysis
      * of the two operands
@@ -122,14 +123,11 @@ void BinOp::semantic(sem::SymbolTable symtable) {
      *   - must be of same type
      */
     if ( !sem::equalType(this->left->type, this->right->type) ) {
-        error("Binary operation operands must of same type");
+        error("Binary operation operands must of same type\n");
         return;
     }
     this->type = this->left->type;
-    std::cerr << "Inferenced type of operation : "
-              << *(this->type)
-              << std::endl;
-    return;
+    debugger.restoreLevel();
 }
 
 /*******************************************************************************
@@ -138,8 +136,8 @@ void BinOp::semantic(sem::SymbolTable symtable) {
 
 void Condition::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
-    std::cerr << "Found a condition" << std::endl;
-    std::cerr << "Performing semantic analysis..." << std::endl;
+    debugger.newLevel();
+    debugger.show("<Condition>\n");
     switch(this->op) {
         case Cond::NOT :
             this->right->semantic(symtable);
@@ -148,7 +146,7 @@ void Condition::semantic(sem::SymbolTable symtable) {
                 return;
             }
             this->type = sem::typeByte;
-            return;
+            break;
         case Cond::AND :
         case Cond::OR :
             this->left->semantic(symtable);
@@ -156,22 +154,25 @@ void Condition::semantic(sem::SymbolTable symtable) {
             if ( !sem::equalType(this->left->type, sem::typeByte)
                     || !sem::equalType(this->right->type, sem::typeByte)
                ) {
-                error("Condition is not of type byte");
+                error("Condition is not of type byte\n");
                 return;
             }
             this->type = sem::typeByte;
-            return;
+            break;
+        case Cond::TRU :
+        case Cond::FALS :
+            break;
         default :
             this->left->semantic(symtable);
             this->right->semantic(symtable);
             if ( !sem::equalType(this->left->type, this->right->type) ) {
-                error("Expressions of different types");
+                error("Expressions of different types\n");
                 return;
             }
             this->type = sem::typeByte;
-            return;
+            break;
     }
-    return;
+    debugger.restoreLevel();
 }
 
 /*******************************************************************************
@@ -180,9 +181,8 @@ void Condition::semantic(sem::SymbolTable symtable) {
 
 void IfElse::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
-    std::cerr << "Found a IfElse statement" << std::endl;
-    std::cerr << "Performing semantic analysis..."
-              << std::endl;
+    debugger.newLevel();
+    debugger.show("<IfElse>\n");
     /**
      * Perform semantic analysis in the order :
      *   - condition (performs necessary checks)
@@ -191,20 +191,14 @@ void IfElse::semantic(sem::SymbolTable symtable) {
      */
     this->cond->semantic(symtable);
     if ( !sem::equalType(this->cond->type, sem::typeByte) ) {
-        error("If condition expects a boolean expression");
+        error("If condition expects a boolean expression\n");
         return;
     }
-    std::cerr << "Condition checks out" << std::endl;
-    std::cerr << "Performing semantic analysis of if body..." << std::endl;
     this->ifBody->semantic(symtable);
-    std::cerr << "If checks out" << std::endl;
     if ( this->elseBody != nullptr ) {
-        std::cerr << "Performing semantic analysis of else body..." << std::endl;
         this->elseBody->semantic(symtable);
-        std::cerr << "Else checks out" << std::endl;
     }
-    std::cerr << "IfElse completed" << std::endl;
-    return;
+    debugger.restoreLevel();
 }
 
 /*******************************************************************************
@@ -213,8 +207,8 @@ void IfElse::semantic(sem::SymbolTable symtable) {
 
 void While::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
-    std::cerr << "Found a while statement" << std::endl;
-    std::cerr << "Performing semantic analysis..." << std::endl;
+    debugger.newLevel();
+    debugger.show("<While>\n");
     /**
      * Perform semantic analysis in the order :
      *   - condition
@@ -222,13 +216,11 @@ void While::semantic(sem::SymbolTable symtable) {
      */
     this->cond->semantic(symtable);
     if ( !sem::equalType(this->cond->type, sem::typeByte) ) {
-        error("While condition expects boolean expression");
+        error("While condition expects boolean expression\n");
         return;
     }
-    std::cerr << "Condition checks out" << std::endl;
-    std::cerr << "Performing semantic analysis of while body..." << std::endl;
     this->body->semantic(symtable);
-    std::cerr << "While completed" << std::endl;
+    debugger.restoreLevel();
 }
 
 /*******************************************************************************
@@ -237,59 +229,50 @@ void While::semantic(sem::SymbolTable symtable) {
 
 void Call::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
-    std::cerr << "Found a function call of function " << this->id << std::endl;
-    std::cerr << "Performing semantic analysis..." << std::endl;
+    debugger.newLevel();
+    debugger.show("<FunctionCall, ", this->id, ">\n");
     auto entry = symtable->lookupEntry(this->id, sem::Lookup::ALL, true);
     if ( entry->eType != sem::EntryType::FUNCTION ) {
-        error("%s is not a function", this->id.c_str());
+        error(this->id, " is not a function\n");
         return;
     }
     /**
      * Check number of params
      */
-    std::cerr << "Checking number of params..." << std::endl;
     if ( this->params.size() < entry->getParams().size() ) {
-        error("Not enough arguments");
+        error("Not enough arguments\n");
         return;
     } else if ( this->params.size() > entry->getParams().size() ) {
-        error("Too many arguments");
+        error("Too many arguments\n");
         return;
     }
-    std::cerr << "Check completed" << std::endl;
     /**
      * Complete semantic analysis of given parameters
      */
-    std::cerr << "Performing semantic analysis of parameters given..." << std::endl;
     for ( auto p : this->params ) {
         p->semantic(symtable);
     }
-    std::cerr << "Parameters completed" << std::endl;
     /**
      * Compare given with original parameters
      */
-    std::cerr << "Checking parameter types..." << std::endl;
     auto& pars = entry->getParams();
     for ( int i = 0; i < this->params.size(); i++ ) {
         if ( !sem::compatibleType(this->params[i]->type, pars[i]->type) ) {
-            error("Type mismatch in function call");
+            error("Type mismatch in parameter ", pars[i]->id, "\nExpected ", this->params[i]->type, "\n");
             return;
         }
     }
-    std::cerr << "Type check completed" << std::endl;
-    /**
-     * Add parameters which need to be added
-     * for the function to work properly
-     */
-    std::cerr << "Adding hidden parameters..." << std::endl;
-    auto& hids = entry->getHidden();
-    for ( int i = 0; i < hids.size(); i++ ) {
-        auto v = std::make_shared<Var>(hids[i]->id, nullptr);
-        v->type = hids[i]->type;
+    this->type = entry->type;
+    debugger.restoreLevel();
+}
+
+void Call::fixCalls(astVecMap &hiddenMap) {
+    for ( auto hid : hiddenMap[this->id] ) {
+        auto temp = std::dynamic_pointer_cast<Param>(hid);
+        auto v = std::make_shared<Var>(temp->id, nullptr);
+        v->type = temp->type;
         this->hidden.push_back(v);
     }
-    this->type = entry->type;
-    std::cerr << "Call completed" << std::endl;
-    return;
 }
 
 /*******************************************************************************
@@ -298,18 +281,16 @@ void Call::semantic(sem::SymbolTable symtable) {
 
 void Ret::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
-    std::cerr << "Found a return statement" << std::endl;
-    std::cerr << "Performing semantic analysis..." << std::endl;
+    debugger.newLevel();
+    debugger.show("<Return>\n");
     this->expr->semantic(symtable);
     this->type = this->expr->type;
-    std::cerr << "Checking type of return with function type..." << std::endl;
     if ( !sem::compatibleType(this->type, symtable->scopeType()) ) {
-        error("Type mismatch in function return");
+        error("Type mismatch in function return\n");
         return;
     }
-    std::cerr << "Type checking completed" << std::endl;
     symtable->addReturn();
-    std::cerr << "Return completed" << std::endl;
+    debugger.restoreLevel();
 }
 
 /*******************************************************************************
@@ -318,18 +299,16 @@ void Ret::semantic(sem::SymbolTable symtable) {
 
 void Assign::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
-    std::cerr << "Found an assignment" << std::endl;
-    std::cerr << "Performing semantic analysis..." << std::endl;
+    debugger.newLevel();
+    debugger.show("<Assignment>\n");
     this->left->semantic(symtable);
     this->right->semantic(symtable);
-    std::cerr << "Checking types..." << std::endl;
     if ( !sem::equalType(this->left->type, this->right->type) ) {
-        error("Type mismatch in assignment");
+        error("Type mismatch in assignment\n");
         return;
     }
-    std::cerr << "Type checking completed" << std::endl;
     this->type = this->left->type;
-    std::cerr << "Assignment completed" << std::endl;
+    debugger.restoreLevel();
 }
 
 /*******************************************************************************
@@ -338,16 +317,15 @@ void Assign::semantic(sem::SymbolTable symtable) {
 
 void VarDecl::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
-    std::cerr << "Found variable declaration of " << this->id << " : " << *(this->type) << std::endl;
-    std::cerr << "Performing semantic analysis..." << std::endl;
-    std::cerr << "Checking if already existing..." << std::endl;
+    debugger.newLevel();
+    debugger.show("<VarDecl, ", this->id, ", ", this->type, ">\n");
     auto entry = symtable->lookupEntry(this->id, sem::Lookup::CURRENT, false);
     if ( entry != nullptr ) {
-        error("Duplicate identifier");
+        error("Duplicate identifier ", this->id, "\n");
         return;
     }
     symtable->insertEntry(std::make_shared<sem::EntryVariable>(this->id, this->type));
-    std::cerr << "Declaration completed" << std::endl;
+    debugger.restoreLevel();
 }
 
 /*******************************************************************************
@@ -356,12 +334,12 @@ void VarDecl::semantic(sem::SymbolTable symtable) {
 
 void Param::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
-    std::cerr << "Found parameter " << this->id << std::endl;
+    debugger.newLevel();
+    debugger.show("<Parameter, ", this->id, ", ", this->type, ">\n");
     auto p = std::make_shared<sem::EntryParameter>(this->id, this->type, this->mode);
     symtable->insertEntry(p);
     symtable->addParam(p);
-    std::cerr << "Parameter added" << std::endl;
-    return;
+    debugger.restoreLevel();
 }
 
 /*******************************************************************************
@@ -369,41 +347,46 @@ void Param::semantic(sem::SymbolTable symtable) {
  *******************************************************************************/
 
 void Func::semantic(sem::SymbolTable symtable) {
+    if ( ast::first ) {
+        this->main = true;
+        ast::first = false;
+    }
+    if ( !this->main ) {
+        debugger.newLevel();
+    }
     linecount = this->line;
-    std::cerr << "Found function declaration : " << this->id << std::endl;
-    std::cerr << "Performing semantic analysis..." << std::endl;
-    std::cerr << "Checking if already existing..." << std::endl;
+    debugger.show("<Function Declaration, ", this->id, ", ", this->type, ">\n");
     auto entry = symtable->lookupEntry(this->id, sem::Lookup::ALL, false);
     if ( entry != nullptr ) {
-        error("Duplicate identifier");
+        error("Duplicate identifier ", this->id, "\n");
         return;
     }
-    std::cerr << "Check completed" << std::endl;
     auto fun = std::make_shared<sem::EntryFunction>(this->id, this->type);
     symtable->insertEntry(fun);
     symtable->openScope(fun);
-    std::cerr << "Adding parameters of function..." << std::endl;
     for ( auto p : this->params ) {
         p->semantic(symtable);
     }
-    std::cerr << "Parameter adding completed" << std::endl;
-    std::cerr << "Performing semantic analysis of declarations..." << std::endl;
     for ( auto d : this->decls ) {
         d->semantic(symtable);
     }
-    std::cerr << "Declarations completed" << std::endl;
-    std::cerr << "Performing semantic analysis on function body..." << std::endl;
     this->body->semantic(symtable);
-    std::cerr << "Body completed" << std::endl;
-    std::cerr << "Adding hidden variables before closing scope..." << std::endl;
     entry = symtable->lookupEntry(this->id, sem::Lookup::ALL, false);
     for ( auto hid : entry->getHidden() ) {
         this->hidden.push_back(std::make_shared<Param>(hid->id, sem::PassMode::REFERENCE, hid->type));
     }
-    std::cerr << "Hiddens completed" << std::endl;
     symtable->closeScope();
-    std::cerr << "Function completed" << std::endl;
-    return;
+    if ( !this->main ) {
+        debugger.restoreLevel();
+    }
+}
+
+void Func::fixCalls(astVecMap &hiddenMap) {
+    hiddenMap[this->id] = this->hidden;
+    for ( auto d : this->decls )
+        d->fixCalls(hiddenMap);
+    this->body->fixCalls(hiddenMap);
+    hiddenMap.erase(this->id);
 }
 
 /*******************************************************************************
@@ -412,13 +395,18 @@ void Func::semantic(sem::SymbolTable symtable) {
 
 void Block::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
-    std::cerr << "Found a block statement" << std::endl;
-    std::cerr << "Performing semantic analysis..." << std::endl;
+    debugger.newLevel();
+    debugger.show("<Block Statement>\n");
     for ( auto s : this->stmts ) {
         s->semantic(symtable);
     }
-    std::cerr << "Block completed" << std::endl;
+    debugger.restoreLevel();
     return;
+}
+
+void Block::fixCalls(astVecMap &hiddenMap) {
+    for ( auto s : this->stmts )
+        s->fixCalls(hiddenMap);
 }
 
 /*******************************************************************************
@@ -426,10 +414,8 @@ void Block::semantic(sem::SymbolTable symtable) {
  *******************************************************************************/
 
 void semantic(astPtr root) {
-    std::cerr << "Preparing for semantic analysis..." << std::endl;
     auto symtable = sem::initSymbolTable();
     root->semantic(symtable);
-    std::cerr.clear();
     std::cerr << "Semantic analysis completed" << std::endl;
     return;
 }

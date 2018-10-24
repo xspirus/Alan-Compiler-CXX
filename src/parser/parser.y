@@ -19,8 +19,8 @@ extern int yylex();
 ast::astPtr * t;
 extern int    linecount;
 
-std::vector<ast::astPtr*> nodes;
-std::vector<ast::astVec*> vecs;
+std::vector<ast::astPtr*>  nodes;
+std::vector<ast::astVec*>  vecs;
 std::vector<sem::TypePtr*> types;
 
 ast::astPtr doParse();
@@ -109,18 +109,18 @@ r_type
     ;
 
 cond
-    : "true"         { $$ = new ast::astPtr(SHARED<ast::Byte>(1)); nodes.push_back($$);                                 }
-    | "false"        { $$ = new ast::astPtr(SHARED<ast::Byte>(0)); nodes.push_back($$);                                 }
-    | '(' cond ')'   { $$ = $2;                                                                                         }
-    | '!' cond       { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::NOT, nullptr, *$2)); nodes.push_back($$); }
-    | expr '<' expr  { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::LT, *$1, *$3)); nodes.push_back($$);      }
-    | expr '>' expr  { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::GT, *$1, *$3)); nodes.push_back($$);      }
-    | expr "==" expr { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::EQ, *$1, *$3)); nodes.push_back($$);      }
-    | expr "!=" expr { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::NEQ, *$1, *$3)); nodes.push_back($$);     }
-    | expr "<=" expr { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::LE, *$1, *$3)); nodes.push_back($$);      }
-    | expr ">=" expr { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::GE, *$1, *$3)); nodes.push_back($$);      }
-    | cond '&' cond  { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::AND, *$1, *$3)); nodes.push_back($$);     }
-    | cond '|' cond  { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::OR, *$1, *$3)); nodes.push_back($$);      }
+    : "true"         { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::TRU, nullptr, nullptr)); nodes.push_back($$);  }
+    | "false"        { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::FALS, nullptr, nullptr)); nodes.push_back($$); }
+    | '(' cond ')'   { $$ = $2;                                                                                              }
+    | '!' cond       { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::NOT, nullptr, *$2)); nodes.push_back($$);      }
+    | expr '<' expr  { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::LT, *$1, *$3)); nodes.push_back($$);           }
+    | expr '>' expr  { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::GT, *$1, *$3)); nodes.push_back($$);           }
+    | expr "==" expr { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::EQ, *$1, *$3)); nodes.push_back($$);           }
+    | expr "!=" expr { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::NEQ, *$1, *$3)); nodes.push_back($$);          }
+    | expr "<=" expr { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::LE, *$1, *$3)); nodes.push_back($$);           }
+    | expr ">=" expr { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::GE, *$1, *$3)); nodes.push_back($$);           }
+    | cond '&' cond  { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::AND, *$1, *$3)); nodes.push_back($$);          }
+    | cond '|' cond  { $$ = new ast::astPtr(SHARED<ast::Condition>(ast::Cond::OR, *$1, *$3)); nodes.push_back($$);           }
     ;
 
 l_value

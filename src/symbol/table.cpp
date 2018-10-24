@@ -13,7 +13,7 @@
 #include <iostream>
 #include <deque>
 
-#include <error/error.hpp>
+#include <message/message.hpp>
 #include <symbol/types.hpp>
 #include <symbol/entry.hpp>
 #include <symbol/table.hpp>
@@ -40,7 +40,7 @@ void Table::openScope(EntryPtr fun) {
 
 void Table::closeScope() {
     if ( scopes.empty() ) {
-        warning("No scopes to close");
+        warning("No scopes to close\n");
         return;
     }
     unsigned int nestingLevel = scopes.front()->nestingLevel;
@@ -102,8 +102,6 @@ void Table::insertEntry(EntryPtr entry) {
             break;
     }
     entries[entry->id].push_front(entry);
-    std::cout << "Inserted";
-    entry->print("");
     return;
 }
 
@@ -111,7 +109,7 @@ EntryPtr Table::lookupEntry(std::string id, Lookup l, bool err) {
     auto exists = this->entries.find(id);
     if ( exists == this->entries.end() ) {
         if (err)
-            error("Unknown identifier : %s", id.c_str());
+            error("Unknown identifier ", id, "\n");
         return nullptr;
     }
     auto s = this->entries[id];
@@ -217,11 +215,8 @@ void Table::addLibs() {
 }
 
 SymbolTable initSymbolTable() {
-    std::cerr << "Initialising SymbolTable" << std::endl;
     SymbolTable ret = std::make_shared<Table>();
-    std::cerr << "Adding standard library functions" << std::endl;
     ret->addLibs();
-    std::cerr << "Standard library added successfully" << std::endl;
     return ret;
 }
 

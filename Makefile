@@ -1,6 +1,6 @@
 # COMPILER #
 CXX := clang++
-CXXFLAGS := -std=c++14 -Wall -O3 -g -DDEBUG
+CXXFLAGS := -std=c++14 -O3 -g -DDEBUG
 LIBS := -lfl
 
 # SOURCE FILE EXTENSION
@@ -48,7 +48,7 @@ parse-lex: $(LEXER_DIR)/lexer.cpp $(PARSER_DIR)/parser.cpp
 	@echo "Parser and Lexer files done successfully"
 
 $(LEXER_DIR)/lexer.cpp: $(LEXER_DIR)/lexer.l
-	flex -s -o $@ $^
+	flex -s -o$@ $^
 
 $(PARSER_DIR)/parser.hpp $(PARSER_DIR)/parser.cpp: $(PARSER_DIR)/parser.y
 	bison -dv -o $(PARSER_DIR)/parser.cpp $^

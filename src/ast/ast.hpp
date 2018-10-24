@@ -15,6 +15,7 @@
 
 #include <memory>
 #include <vector>
+#include <unordered_map>
 
 #include <symbol/types.hpp>
 #include <symbol/entry.hpp>
@@ -30,14 +31,17 @@ namespace ast {
 
 class Node;
 
-typedef std::shared_ptr<Node> astPtr;
-typedef std::vector<astPtr>   astVec;
+typedef std::shared_ptr<Node>                   astPtr;
+typedef std::vector<astPtr>                     astVec;
+typedef std::unordered_map<std::string, astVec> astVecMap;
 
 /*******************************************************************************
  *************************** Conditions enumeration ****************************
  *******************************************************************************/
 
 enum class Cond {
+    TRU,
+    FALS,
     LT,
     GT,
     LE,
@@ -56,12 +60,14 @@ enum class Cond {
 class Node {
     public :
         sem::TypePtr type;
-        int     line;
+        int          line;
 
         Node();
         virtual ~Node() = default;
 
         virtual void semantic(sem::SymbolTable symtable) = 0;
+
+        virtual void fixCalls(astVecMap &hiddenMap);
 };
 
 /*******************************************************************************
@@ -198,6 +204,8 @@ class Call : public Node {
         virtual ~Call() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+
+        void fixCalls(astVecMap &hiddenMap) override;
 };
 
 /*******************************************************************************
@@ -265,6 +273,7 @@ class Param : public Node {
 class Func : public Node {
     public :
         std::string id;
+        bool        main;
         astVec      params;
         astVec      hidden;
         astVec      decls;
@@ -274,6 +283,8 @@ class Func : public Node {
         virtual ~Func() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+
+        void fixCalls(astVecMap &hiddenMap) override;
 };
 
 /*******************************************************************************
@@ -288,6 +299,8 @@ class Block : public Node {
         virtual ~Block() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+
+        void fixCalls(astVecMap &hiddenMap) override;
 };
 
 /*******************************************************************************

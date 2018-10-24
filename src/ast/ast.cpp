@@ -152,6 +152,7 @@ Param::Param(std::string id, sem::PassMode mode, sem::TypePtr type) : Node() {
 
 Func::Func(std::string id, astVec params, sem::TypePtr type, astVec decls, astPtr body) : Node() {
     this->type   = type;
+    this->main   = false;
     this->id     = id;
     this->params = std::move(params);
     this->decls  = std::move(decls);

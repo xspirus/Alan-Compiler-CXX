@@ -17,7 +17,6 @@
 
 
 void Debugger::newLevel() {
-    std::cerr << this->prefix.substr(0, this->prefix.length() - 2) << "`\u2015\n";
     this->prefixes.push_front(this->prefix);
     this->prefix.append("| ");
 }
