@@ -13,7 +13,7 @@
 #include <iostream>
 
 #include <symbol/types.hpp>
-#include <error/error.hpp>
+#include <message/message.hpp>
 
 namespace sem {
 
@@ -23,10 +23,6 @@ namespace sem {
 
 TypePtr Type::getRef() {
     return nullptr;
-}
-
-std::ostream& operator<<(std::ostream &out, const Type &t) {
-    return t.print(out);
 }
 
 /*******************************************************************************
@@ -42,9 +38,8 @@ int TypeVoid::getSize() {
     return -1;
 }
 
-std::ostream &TypeVoid::print(std::ostream &out) const {
-    out << "void";
-    return out;
+std::string TypeVoid::str() {
+    return "proc";
 }
 
 /*******************************************************************************
@@ -59,9 +54,8 @@ int TypeInt::getSize() {
     return INT_SIZE;
 }
 
-std::ostream &TypeInt::print(std::ostream &out) const {
-    out << "integer";
-    return out;
+std::string TypeInt::str() {
+    return "int";
 }
 
 /*******************************************************************************
@@ -76,9 +70,8 @@ int TypeByte::getSize() {
     return BYTE_SIZE;
 }
 
-std::ostream &TypeByte::print(std::ostream &out) const {
-    out << "byte";
-    return out;
+std::string TypeByte::str() {
+    return "byte";
 }
 
 /*******************************************************************************
@@ -101,9 +94,8 @@ TypePtr TypeArray::getRef() {
     return this->refType;
 }
 
-std::ostream &TypeArray::print(std::ostream &out) const {
-    out << "array of " << *refType << "[" << size << "]";
-    return out;
+std::string TypeArray::str() {
+    return "Array of " + this->refType->str() + "[" + std::to_string(this->size) + "]";
 }
 
 /*******************************************************************************
@@ -112,7 +104,7 @@ std::ostream &TypeArray::print(std::ostream &out) const {
 
 TypeIArray::TypeIArray(TypePtr type) {
     if (type->t == genType::VOID)
-        error("Array cannot be of type void");
+        error("Array cannot be of type void\n");
     this->t = genType::IARRAY;
     this->refType = type;
 }
@@ -125,9 +117,8 @@ TypePtr TypeIArray::getRef() {
     return this->refType;
 }
 
-std::ostream &TypeIArray::print(std::ostream &out) const {
-    out << "iarray of " << *refType << "[]";
-    return out;
+std::string TypeIArray::str() {
+    return "IArray of " + this->refType->str();
 }
 
 /*******************************************************************************

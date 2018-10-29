@@ -56,9 +56,8 @@ class Type {
         virtual int getSize() = 0;
         virtual TypePtr getRef();
 
-        virtual std::ostream& print(std::ostream &out) const = 0;
+        virtual std::string str() = 0;
 
-        friend std::ostream& operator<<(std::ostream &out, const Type &t);
 };
 
 /*******************************************************************************
@@ -70,7 +69,7 @@ class TypeVoid : public Type {
         TypeVoid();
         virtual ~TypeVoid() {  }
         virtual int getSize() override;
-        virtual std::ostream& print(std::ostream &out) const override;
+        virtual std::string str() override;
 };
 
 /*******************************************************************************
@@ -82,7 +81,7 @@ class TypeInt : public Type {
         TypeInt();
         virtual ~TypeInt() {  }
         virtual int getSize() override;
-        virtual std::ostream& print(std::ostream &out) const override;
+        virtual std::string str() override;
 };
 
 /*******************************************************************************
@@ -94,7 +93,7 @@ class TypeByte : public Type {
         TypeByte();
         virtual ~TypeByte() {  }
         virtual int getSize() override;
-        virtual std::ostream& print(std::ostream &out) const override;
+        virtual std::string str() override;
 };
 
 /*******************************************************************************
@@ -110,7 +109,7 @@ class TypeArray : public Type {
         virtual ~TypeArray() {  }
         virtual int getSize() override;
         virtual TypePtr getRef() override;
-        virtual std::ostream& print(std::ostream &out) const override;
+        virtual std::string str() override;
 };
 
 /*******************************************************************************
@@ -125,7 +124,7 @@ class TypeIArray : public Type {
         virtual ~TypeIArray() {  }
         virtual int getSize() override;
         virtual TypePtr getRef() override;
-        virtual std::ostream& print(std::ostream &out) const override;
+        virtual std::string str() override;
 };
 
 /*******************************************************************************

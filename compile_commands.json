@@ -1,62 +1,67 @@
 [
-    {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/types.o src/symbol/types.cpp",
-        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
-        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/types.cpp"
-    },
-    {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/table.o src/symbol/table.cpp",
-        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
-        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/table.cpp"
-    },
-    {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/scope.o src/symbol/scope.cpp",
-        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
-        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/scope.cpp"
-    },
-    {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/entry.o src/symbol/entry.cpp",
-        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
-        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/entry.cpp"
-    },
-    {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/fix.o src/fix/fix.cpp",
-        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
-        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/fix/fix.cpp"
-    },
-    {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/error.o src/error/error.cpp",
-        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
-        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/error/error.cpp"
-    },
-    {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/message.o src/message/message.cpp",
-        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
-        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/message/message.cpp"
-    },
-    {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/ast.o src/ast/ast.cpp",
-        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
-        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/ast/ast.cpp"
-    },
-    {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/semantic.o src/ast/semantic.cpp",
-        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
-        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/ast/semantic.cpp"
-    },
-    {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/parser.o src/parser/parser.cpp",
-        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
-        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/parser/parser.cpp"
-    },
-    {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/lexer.o src/lexer/lexer.cpp",
-        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
-        "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/lexer/lexer.cpp"
-    },
-    {
-        "command": "c++ -c -std=c++14 -Wall -O3 -g -I/home/spirus/Documents/Alan-Compiler-CXX/src/ -o build/main.o main.cpp",
-        "directory": "/home/spirus/Documents/Alan-Compiler-CXX",
-        "file": "/home/spirus/Documents/Alan-Compiler-CXX/main.cpp"
-    }
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/cc -Dalanstd_EXPORTS  -O3 -DNDEBUG -fPIC   -o CMakeFiles/alanstd.dir/src/lib/lib.c.o   -c /home/spirus/Documents/Alan-Compiler-CXX/src/lib/lib.c",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/lib/lib.c"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++14 -o CMakeFiles/ALAN.dir/src/ast/ast.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/ast/ast.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/ast/ast.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++14 -o CMakeFiles/ALAN.dir/src/ast/semantic.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/ast/semantic.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/ast/semantic.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++14 -o CMakeFiles/ALAN.dir/src/error/error.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/error/error.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/error/error.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++14 -o CMakeFiles/ALAN.dir/src/fix/fix.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/fix/fix.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/fix/fix.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++14 -o CMakeFiles/ALAN.dir/src/message/message.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/message/message.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/message/message.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++14 -o CMakeFiles/ALAN.dir/src/symbol/entry.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/symbol/entry.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/entry.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++14 -o CMakeFiles/ALAN.dir/src/symbol/scope.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/symbol/scope.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/scope.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++14 -o CMakeFiles/ALAN.dir/src/symbol/table.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/symbol/table.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/table.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++14 -o CMakeFiles/ALAN.dir/src/symbol/types.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/symbol/types.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/types.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++14 -o CMakeFiles/ALAN.dir/main.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/main.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/main.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++14 -o CMakeFiles/ALAN.dir/src/lexer/lexer.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/lexer/lexer.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/lexer/lexer.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++14 -o CMakeFiles/ALAN.dir/src/parser/parser.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/parser/parser.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/parser/parser.cpp"
+}
 ]
