@@ -2,7 +2,7 @@ build
 bin
 libs
 *.plist
-.clang-format
+*.clang-format
 lexer.cpp
 parser.cpp
 parser.hpp
