@@ -19,6 +19,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${ALAN_COMPILER_BIN_DIR}")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${ALAN_COMPILER_LIB_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${ALAN_COMPILER_LIB_DIR}")
 
+find_package(LLVM REQUIRED CONFIG)
+llvm_map_components_to_libnames(LLVM_LIBS core)
+
 # message(${ALAN_COMPILER_SOURCE_DIR})
 # message(${ALAN_COMPILER_BIN_DIR})
 # message(${ALAN_COMPILER_BUILD_DIR})
@@ -48,11 +51,14 @@ add_library(alanstd STATIC ${ALAN_COMPILER_SOURCE_DIR}/src/lib/lib.c)
 
 add_executable(ALAN ${SOURCE_FILES})
 add_dependencies(ALAN LEXER PARSER)
-target_include_directories(ALAN PRIVATE ${ALAN_COMPILER_INCLUDE_DIR})
+target_include_directories(ALAN 
+    PRIVATE ${ALAN_COMPILER_INCLUDE_DIR} ${LLVM_INCLUDE_DIRS})
 target_compile_options(ALAN 
     PRIVATE -Wall
     )
-target_link_libraries(ALAN "fl")
+target_compile_definitions(ALAN
+    PRIVATE ${LLVM_DEFINITIONS})
+target_link_libraries(ALAN "fl" "${LLVM_LIBS}")
 
 add_custom_command(
     TARGET ALAN

@@ -1,62 +1,67 @@
 [
 {
   "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/cc   -O3 -DNDEBUG   -o CMakeFiles/alanstd.dir/src/lib/lib.c.o   -c /home/spirus/Documents/Alan-Compiler-CXX/src/lib/lib.c",
-  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/lib/lib.c"
-},
-{
-  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/ast/ast.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/ast/ast.cpp",
+  "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/ast/ast.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/ast/ast.cpp",
   "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/ast/ast.cpp"
 },
 {
   "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/ast/semantic.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/ast/semantic.cpp",
+  "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/ast/semantic.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/ast/semantic.cpp",
   "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/ast/semantic.cpp"
 },
 {
   "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/fix/fix.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/fix/fix.cpp",
+  "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/codegen/codegen.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/codegen/codegen.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/codegen/codegen.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/fix/fix.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/fix/fix.cpp",
   "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/fix/fix.cpp"
 },
 {
   "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/message/message.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/message/message.cpp",
-  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/message/message.cpp"
-},
-{
-  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/symbol/entry.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/symbol/entry.cpp",
-  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/entry.cpp"
-},
-{
-  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/symbol/scope.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/symbol/scope.cpp",
-  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/scope.cpp"
-},
-{
-  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/symbol/table.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/symbol/table.cpp",
-  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/table.cpp"
-},
-{
-  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/symbol/types.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/symbol/types.cpp",
-  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/types.cpp"
-},
-{
-  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/main.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/main.cpp",
-  "file": "/home/spirus/Documents/Alan-Compiler-CXX/main.cpp"
-},
-{
-  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/lexer/lexer.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/lexer/lexer.cpp",
+  "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/lexer/lexer.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/lexer/lexer.cpp",
   "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/lexer/lexer.cpp"
 },
 {
   "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/parser/parser.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/parser/parser.cpp",
+  "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/message/message.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/message/message.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/message/message.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/parser/parser.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/parser/parser.cpp",
   "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/parser/parser.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/symbol/entry.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/symbol/entry.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/entry.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/symbol/scope.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/symbol/scope.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/scope.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/symbol/table.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/symbol/table.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/table.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/symbol/types.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/symbol/types.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/symbol/types.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/main.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/main.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/main.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/cc   -O3 -DNDEBUG   -o CMakeFiles/alanstd.dir/src/lib/lib.c.o   -c /home/spirus/Documents/Alan-Compiler-CXX/src/lib/lib.c",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/lib/lib.c"
 }
 ]
