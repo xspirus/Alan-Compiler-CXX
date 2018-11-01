@@ -56,7 +56,9 @@ class Type {
         virtual int getSize() = 0;
         virtual TypePtr getRef();
 
-        virtual std::string str() = 0;
+        virtual std::ostream& print(std::ostream &out) const = 0;
+
+        friend std::ostream& operator<<(std::ostream &out, const Type &t);
 
 };
 
@@ -69,7 +71,7 @@ class TypeVoid : public Type {
         TypeVoid();
         virtual ~TypeVoid() {  }
         virtual int getSize() override;
-        virtual std::string str() override;
+        virtual std::ostream& print(std::ostream &out) const override;
 };
 
 /*******************************************************************************
@@ -81,7 +83,7 @@ class TypeInt : public Type {
         TypeInt();
         virtual ~TypeInt() {  }
         virtual int getSize() override;
-        virtual std::string str() override;
+        virtual std::ostream& print(std::ostream &out) const override;
 };
 
 /*******************************************************************************
@@ -93,7 +95,7 @@ class TypeByte : public Type {
         TypeByte();
         virtual ~TypeByte() {  }
         virtual int getSize() override;
-        virtual std::string str() override;
+        virtual std::ostream& print(std::ostream &out) const override;
 };
 
 /*******************************************************************************
@@ -109,7 +111,7 @@ class TypeArray : public Type {
         virtual ~TypeArray() {  }
         virtual int getSize() override;
         virtual TypePtr getRef() override;
-        virtual std::string str() override;
+        virtual std::ostream& print(std::ostream &out) const override;
 };
 
 /*******************************************************************************
@@ -124,7 +126,7 @@ class TypeIArray : public Type {
         virtual ~TypeIArray() {  }
         virtual int getSize() override;
         virtual TypePtr getRef() override;
-        virtual std::string str() override;
+        virtual std::ostream& print(std::ostream &out) const override;
 };
 
 /*******************************************************************************

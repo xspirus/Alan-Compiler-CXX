@@ -25,6 +25,10 @@ TypePtr Type::getRef() {
     return nullptr;
 }
 
+std::ostream& operator<<(std::ostream &out, const Type &t) {
+    return t.print(out);
+}
+
 /*******************************************************************************
  ************************************ VOID *************************************
  *******************************************************************************/
@@ -38,8 +42,8 @@ int TypeVoid::getSize() {
     return -1;
 }
 
-std::string TypeVoid::str() {
-    return "proc";
+std::ostream& TypeVoid::print(std::ostream &out) const {
+    return ( out << "proc" );
 }
 
 /*******************************************************************************
@@ -54,8 +58,8 @@ int TypeInt::getSize() {
     return INT_SIZE;
 }
 
-std::string TypeInt::str() {
-    return "int";
+std::ostream& TypeInt::print(std::ostream &out) const {
+    return ( out << "int" );
 }
 
 /*******************************************************************************
@@ -70,8 +74,8 @@ int TypeByte::getSize() {
     return BYTE_SIZE;
 }
 
-std::string TypeByte::str() {
-    return "byte";
+std::ostream& TypeByte::print(std::ostream &out) const {
+    return ( out << "byte" );
 }
 
 /*******************************************************************************
@@ -94,8 +98,8 @@ TypePtr TypeArray::getRef() {
     return this->refType;
 }
 
-std::string TypeArray::str() {
-    return "Array of " + this->refType->str() + "[" + std::to_string(this->size) + "]";
+std::ostream& TypeArray::print(std::ostream &out) const {
+    return ( out << "array of " << *this->refType << "[" << this->size << "]" );
 }
 
 /*******************************************************************************
@@ -117,8 +121,8 @@ TypePtr TypeIArray::getRef() {
     return this->refType;
 }
 
-std::string TypeIArray::str() {
-    return "IArray of " + this->refType->str();
+std::ostream& TypeIArray::print(std::ostream &out) const {
+    return ( out << "iarray of " << *this->refType );
 }
 
 /*******************************************************************************
