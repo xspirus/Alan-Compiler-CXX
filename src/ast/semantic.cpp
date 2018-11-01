@@ -10,9 +10,9 @@
  *                                                                             *
  *******************************************************************************/
 
-// #include <error/error.hpp>
 #include <message/message.hpp>
 #include <ast/ast.hpp>
+#include <general/general.hpp>
 
 #include <iostream>
 #include <vector>
@@ -270,7 +270,7 @@ void Call::semantic(sem::SymbolTable symtable) {
 void Call::fixCalls(astVecMap &hiddenMap) {
     for ( auto hid : hiddenMap[this->id] ) {
         auto temp = std::dynamic_pointer_cast<Param>(hid);
-        auto v = std::make_shared<Var>(temp->id, nullptr);
+        auto v = newShared<Var>(temp->id, nullptr);
         v->type = temp->type;
         this->hidden.push_back(v);
     }
@@ -325,7 +325,7 @@ void VarDecl::semantic(sem::SymbolTable symtable) {
         error("Duplicate identifier ", this->id);
         return;
     }
-    symtable->insertEntry(std::make_shared<sem::EntryVariable>(this->id, this->type));
+    symtable->insertEntry(newShared<sem::EntryVariable>(this->id, this->type));
     debugger.restoreLevel();
 }
 
@@ -337,7 +337,7 @@ void Param::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
     debugger.newLevel();
     debugger.show("<Parameter, ", this->id, ", ", *this->type, ">");
-    auto p = std::make_shared<sem::EntryParameter>(this->id, this->type, this->mode);
+    auto p = newShared<sem::EntryParameter>(this->id, this->type, this->mode);
     symtable->insertEntry(p);
     symtable->addParam(p);
     debugger.restoreLevel();
@@ -362,7 +362,7 @@ void Func::semantic(sem::SymbolTable symtable) {
         error("Duplicate identifier ", this->id);
         return;
     }
-    auto fun = std::make_shared<sem::EntryFunction>(this->id, this->type);
+    auto fun = newShared<sem::EntryFunction>(this->id, this->type);
     symtable->insertEntry(fun);
     symtable->openScope(fun);
     for ( auto p : this->params ) {
@@ -374,7 +374,7 @@ void Func::semantic(sem::SymbolTable symtable) {
     this->body->semantic(symtable);
     entry = symtable->lookupEntry(this->id, sem::Lookup::ALL, false);
     for ( auto hid : entry->getHidden() ) {
-        this->hidden.push_back(std::make_shared<Param>(hid->id, sem::PassMode::REFERENCE, hid->type));
+        this->hidden.push_back(newShared<Param>(hid->id, sem::PassMode::REFERENCE, hid->type));
     }
     symtable->closeScope();
     if ( !this->main ) {

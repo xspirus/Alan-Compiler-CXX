@@ -17,11 +17,7 @@
 #include <symbol/types.hpp>
 #include <symbol/entry.hpp>
 #include <symbol/table.hpp>
-
-template<typename T, typename ... Args>
-static inline std::shared_ptr<T> SHARED(Args ... args) {
-   return std::make_shared<T>(args...);
-}
+#include <general/general.hpp>
 
 namespace sem {
 
@@ -35,7 +31,7 @@ void Table::openScope(EntryPtr fun) {
         nestingLevel = 1;
     else
         nestingLevel = scopes.front()->nestingLevel + 1;
-    scopes.push_front(std::make_shared<Scope>(nestingLevel, fun));
+    scopes.push_front(newShared<Scope>(nestingLevel, fun));
 }
 
 void Table::closeScope() {
@@ -136,7 +132,7 @@ void Table::addLibs() {
     /**
      * Global scope pseudofunction
      */
-    auto global = std::make_shared<EntryFunction>("global", typeVoid);
+    auto global = newShared<EntryFunction>("global", typeVoid);
     this->openScope(global);
     /**
      * Standard library functions :
@@ -156,66 +152,66 @@ void Table::addLibs() {
      *   - void strcat(reference byte trg, reference byte src)
      */
     /* void writeInteger(int n) */
-    auto writeInteger = SHARED<EntryFunction>("writeInteger", typeVoid);
-    writeInteger->addParam(SHARED<EntryParameter>("n", typeInteger, PassMode::VALUE));
+    auto writeInteger = newShared<EntryFunction>("writeInteger", typeVoid);
+    writeInteger->addParam(newShared<EntryParameter>("n", typeInteger, PassMode::VALUE));
     this->insertEntry(writeInteger);
     /* void writeByte(byte b) */
-    auto writeByte = SHARED<EntryFunction>("writeByte", typeVoid);
-    writeByte->addParam(SHARED<EntryParameter>("b", typeByte, PassMode::VALUE));
+    auto writeByte = newShared<EntryFunction>("writeByte", typeVoid);
+    writeByte->addParam(newShared<EntryParameter>("b", typeByte, PassMode::VALUE));
     this->insertEntry(writeByte);
     /* void writeChar(byte b) */
-    auto writeChar = SHARED<EntryFunction>("writeChar", typeVoid);
-    writeChar->addParam(SHARED<EntryParameter>("b", typeByte, PassMode::VALUE));
+    auto writeChar = newShared<EntryFunction>("writeChar", typeVoid);
+    writeChar->addParam(newShared<EntryParameter>("b", typeByte, PassMode::VALUE));
     this->insertEntry(writeChar);
     /* void writeString(reference byte s) */
-    auto writeString = SHARED<EntryFunction>("writeString", typeVoid);
-    writeString->addParam(SHARED<EntryParameter>("s", SHARED<TypeIArray>(typeByte), PassMode::REFERENCE));
+    auto writeString = newShared<EntryFunction>("writeString", typeVoid);
+    writeString->addParam(newShared<EntryParameter>("s", newShared<TypeIArray>(typeByte), PassMode::REFERENCE));
     this->insertEntry(writeString);
     /* int readInteger() */
-    auto readInteger = SHARED<EntryFunction>("readInteger", typeInteger);
+    auto readInteger = newShared<EntryFunction>("readInteger", typeInteger);
     this->insertEntry(readInteger);
     /* byte readByte() */
-    auto readByte = SHARED<EntryFunction>("readByte", typeByte);
+    auto readByte = newShared<EntryFunction>("readByte", typeByte);
     this->insertEntry(readByte);
     /* byte readChar() */
-    auto readChar = SHARED<EntryFunction>("readChar", typeByte);
+    auto readChar = newShared<EntryFunction>("readChar", typeByte);
     this->insertEntry(readChar);
     /* void readString(int n, reference byte s) */
-    auto readString = SHARED<EntryFunction>("readString", typeVoid);
-    readString->addParam(SHARED<EntryParameter>("n", typeInteger, PassMode::VALUE));
-    readString->addParam(SHARED<EntryParameter>("s", SHARED<TypeIArray>(typeByte), PassMode::REFERENCE));
+    auto readString = newShared<EntryFunction>("readString", typeVoid);
+    readString->addParam(newShared<EntryParameter>("n", typeInteger, PassMode::VALUE));
+    readString->addParam(newShared<EntryParameter>("s", newShared<TypeIArray>(typeByte), PassMode::REFERENCE));
     this->insertEntry(readString);
     /* int extend(byte b) */
-    auto extend = SHARED<EntryFunction>("extend", typeInteger);
-    extend->addParam(SHARED<EntryParameter>("b", typeByte, PassMode::VALUE));
+    auto extend = newShared<EntryFunction>("extend", typeInteger);
+    extend->addParam(newShared<EntryParameter>("b", typeByte, PassMode::VALUE));
     this->insertEntry(extend);
     /* byte shrink(int i) */
-    auto shrink = SHARED<EntryFunction>("shrink", typeByte);
-    shrink->addParam(SHARED<EntryParameter>("i", typeInteger, PassMode::VALUE));
+    auto shrink = newShared<EntryFunction>("shrink", typeByte);
+    shrink->addParam(newShared<EntryParameter>("i", typeInteger, PassMode::VALUE));
     this->insertEntry(shrink);
     /* int strlen(reference byte s) */
-    auto astrlen = SHARED<EntryFunction>("strlen", typeInteger);
-    astrlen->addParam(SHARED<EntryParameter>("s", SHARED<TypeIArray>(typeByte), PassMode::REFERENCE));
+    auto astrlen = newShared<EntryFunction>("strlen", typeInteger);
+    astrlen->addParam(newShared<EntryParameter>("s", newShared<TypeIArray>(typeByte), PassMode::REFERENCE));
     this->insertEntry(astrlen);
     /* int strcmp(reference byte s1, reference byte s2) */
-    auto astrcmp = SHARED<EntryFunction>("strcmp", typeInteger);
-    astrcmp->addParam(SHARED<EntryParameter>("s1", SHARED<TypeIArray>(typeByte), PassMode::REFERENCE));
-    astrcmp->addParam(SHARED<EntryParameter>("s2", SHARED<TypeIArray>(typeByte), PassMode::REFERENCE));
+    auto astrcmp = newShared<EntryFunction>("strcmp", typeInteger);
+    astrcmp->addParam(newShared<EntryParameter>("s1", newShared<TypeIArray>(typeByte), PassMode::REFERENCE));
+    astrcmp->addParam(newShared<EntryParameter>("s2", newShared<TypeIArray>(typeByte), PassMode::REFERENCE));
     this->insertEntry(astrcmp);
     /* void strcpy(reference byte trg, reference byte src) */
-    auto astrcpy = SHARED<EntryFunction>("strcpy", typeInteger);
-    astrcpy->addParam(SHARED<EntryParameter>("trg", SHARED<TypeIArray>(typeByte), PassMode::REFERENCE));
-    astrcpy->addParam(SHARED<EntryParameter>("src", SHARED<TypeIArray>(typeByte), PassMode::REFERENCE));
+    auto astrcpy = newShared<EntryFunction>("strcpy", typeInteger);
+    astrcpy->addParam(newShared<EntryParameter>("trg", newShared<TypeIArray>(typeByte), PassMode::REFERENCE));
+    astrcpy->addParam(newShared<EntryParameter>("src", newShared<TypeIArray>(typeByte), PassMode::REFERENCE));
     this->insertEntry(astrcpy);
     /* void strcat(reference byte trg, reference byte src) */
-    auto astrcat = SHARED<EntryFunction>("strcat", typeInteger);
-    astrcat->addParam(SHARED<EntryParameter>("trg", SHARED<TypeIArray>(typeByte), PassMode::REFERENCE));
-    astrcat->addParam(SHARED<EntryParameter>("src", SHARED<TypeIArray>(typeByte), PassMode::REFERENCE));
+    auto astrcat = newShared<EntryFunction>("strcat", typeInteger);
+    astrcat->addParam(newShared<EntryParameter>("trg", newShared<TypeIArray>(typeByte), PassMode::REFERENCE));
+    astrcat->addParam(newShared<EntryParameter>("src", newShared<TypeIArray>(typeByte), PassMode::REFERENCE));
     this->insertEntry(astrcat);
 }
 
 SymbolTable initSymbolTable() {
-    SymbolTable ret = std::make_shared<Table>();
+    SymbolTable ret = newShared<Table>();
     ret->addLibs();
     return ret;
 }

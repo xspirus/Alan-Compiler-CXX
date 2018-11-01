@@ -11,6 +11,7 @@
  *******************************************************************************/
 
 #include <ast/ast.hpp>
+#include <general/general.hpp>
 
 namespace ast {
 
@@ -45,7 +46,7 @@ Byte::Byte(unsigned char b) : Node() {
  *******************************************************************************/
 
 String::String(std::string s) : Node() {
-    this->type = std::make_shared<sem::TypeArray>(s.size() + 1, sem::typeByte);
+    this->type = newShared<sem::TypeArray>(s.size() + 1, sem::typeByte);
     this->s    = s;
 }
 

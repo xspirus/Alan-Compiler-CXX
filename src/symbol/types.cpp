@@ -14,6 +14,7 @@
 
 #include <symbol/types.hpp>
 #include <message/message.hpp>
+#include <general/general.hpp>
 
 namespace sem {
 
@@ -165,8 +166,8 @@ bool compatibleType(TypePtr a, TypePtr b) {
  ******************************* Constant Types ********************************
  *******************************************************************************/
 
-TypePtr typeInteger = std::make_shared<TypeInt>();
-TypePtr typeByte    = std::make_shared<TypeByte>();
-TypePtr typeVoid    = std::make_shared<TypeVoid>();
+TypePtr typeInteger = newShared<TypeInt>();
+TypePtr typeByte    = newShared<TypeByte>();
+TypePtr typeVoid    = newShared<TypeVoid>();
 
 } // end namespace sem
