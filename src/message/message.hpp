@@ -22,43 +22,40 @@ typedef std::deque<std::string> stringStack;
 extern int    linecount;
 extern char * filename;
 
-template<typename T>
-void display(T t) {
-    std::cerr << t;
-}
-
-template<typename T, typename ... Args>
-void display(T t, Args ... args) {
-    std::cerr << t;
-    display(args...);
+template<typename ... Args>
+void display(Args&& ... args) {
+    (std::cerr << ... << args) << std::endl;
 }
 
 template<typename ... Args>
-void error(Args ... args) {
+void error(Args&& ... args) {
     std::cerr << "*ERROR*" << std::endl;
     std::cerr << "File: " << filename << std::endl;
     std::cerr << "Line " << linecount << ": ";
     display(args...);
+    exit(-1);
 }
 
 template<typename ... Args>
-void fatal(Args ... args) {
+void fatal(Args&& ... args) {
     std::cerr << "*FATAL*" << std::endl;
     std::cerr << "File: " << filename << std::endl;
     std::cerr << "Line " << linecount << ": ";
     display(args...);
+    exit(-2);
 }
 
 template<typename ... Args>
-void internal(Args ... args) {
+void internal(Args&& ... args) {
     std::cerr << "*INTERNAL*" << std::endl;
     std::cerr << "File: " << filename << std::endl;
     std::cerr << "Line " << linecount << ": ";
     display(args...);
+    exit(-3);
 }
 
 template<typename ... Args>
-void warning(Args ... args) {
+void warning(Args&& ... args) {
     std::cerr << "*WARNING*" << std::endl;
     std::cerr << "File: " << filename << std::endl;
     std::cerr << "Line " << linecount << ": ";
@@ -66,7 +63,7 @@ void warning(Args ... args) {
 }
 
 template<typename ... Args>
-void debug(Args ... args) {
+void debug(Args&& ... args) {
 #ifndef NDEBUG
     display(args...);
 #endif
@@ -80,7 +77,7 @@ class Debugger {
         void newLevel();
         void restoreLevel();
         template<typename ... Args>
-            void show(Args ... args){
+            void show(Args&& ... args){
 #ifndef NDEBUG
                 std::cerr << this->prefix;
                 display(args...);
