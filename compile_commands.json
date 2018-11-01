@@ -1,7 +1,7 @@
 [
 {
   "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/cc -Dalanstd_EXPORTS  -O3 -DNDEBUG -fPIC   -o CMakeFiles/alanstd.dir/src/lib/lib.c.o   -c /home/spirus/Documents/Alan-Compiler-CXX/src/lib/lib.c",
+  "command": "/usr/bin/cc   -O3 -DNDEBUG   -o CMakeFiles/alanstd.dir/src/lib/lib.c.o   -c /home/spirus/Documents/Alan-Compiler-CXX/src/lib/lib.c",
   "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/lib/lib.c"
 },
 {
