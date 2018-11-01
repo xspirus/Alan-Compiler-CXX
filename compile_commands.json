@@ -16,11 +16,6 @@
 },
 {
   "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/error/error.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/error/error.cpp",
-  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/error/error.cpp"
-},
-{
-  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
   "command": "/usr/bin/c++   -I/home/spirus/Documents/Alan-Compiler-CXX/src  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/fix/fix.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/fix/fix.cpp",
   "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/fix/fix.cpp"
 },
