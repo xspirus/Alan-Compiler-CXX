@@ -40,7 +40,7 @@ void Table::openScope(EntryPtr fun) {
 
 void Table::closeScope() {
     if ( scopes.empty() ) {
-        warning("No scopes to close\n");
+        warning("No scopes to close");
         return;
     }
     unsigned int nestingLevel = scopes.front()->nestingLevel;
@@ -109,7 +109,7 @@ EntryPtr Table::lookupEntry(std::string id, Lookup l, bool err) {
     auto exists = this->entries.find(id);
     if ( exists == this->entries.end() ) {
         if (err)
-            error("Unknown identifier ", id, "\n");
+            error("Unknown identifier ", id);
         return nullptr;
     }
     auto s = this->entries[id];

@@ -25,44 +25,44 @@ namespace sem {
  *******************************************************************************/
 
 int Entry::getOffset() {
-    error("Not a variable/parameter (", this->id, ")\n");
+    error("Not a variable/parameter (", this->id, ")");
     return -1;
 }
 
 void Entry::setOffset(int offset) {
-    error("Not a variable/parameter (", this->id, ")\n");
+    error("Not a variable/parameter (", this->id, ")");
 }
 
 int Entry::getReturns() {
-    error("Not a function (", this->id, ")\n");
+    error("Not a function (", this->id, ")");
     return -1;
 }
 
 const EntryVector& Entry::getParams() const {
-    error("Not a function (", this->id, ")\n");
+    error("Not a function (", this->id, ")");
 }
 
 const EntryVector& Entry::getHidden() const {
-    error("Not a function (", this->id, ")\n");
+    error("Not a function (", this->id, ")");
 }
 
 PassMode Entry::getMode() {
-    error("Not a parameter (", this->id, ")\n");
+    error("Not a parameter (", this->id, ")");
     return PassMode::VALUE;
 }
 
 void Entry::addParam(EntryPtr param) {
-    error("Not a function (", this->id, ")\n");
+    error("Not a function (", this->id, ")");
     return;
 }
 
 void Entry::addHidden(EntryPtr entry) {
-    error("Not a function (", this->id, ")\n");
+    error("Not a function (", this->id, ")");
     return;
 }
 
 void Entry::addReturn() {
-    error("Not a function (", this->id, ")\n");
+    error("Not a function (", this->id, ")");
     return;
 }
 
@@ -144,7 +144,7 @@ void EntryFunction::print(std::string prefix) {
 EntryParameter::EntryParameter(std::string id, TypePtr type, PassMode mode) {
     if ( type->t == genType::IARRAY 
             && mode != PassMode::REFERENCE ) {
-        error("Arrays must always be passed by reference\n");
+        error("Arrays must always be passed by reference");
     }
     this->id = std::move(id);
     this->type = type;
