@@ -28,5 +28,6 @@ extern ast::astPtr parse();
 int main() {
     auto root = parse();
     ast::semantic(root);
+    ast::codegen(root);
     return 0;
 }
