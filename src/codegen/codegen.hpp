@@ -36,6 +36,7 @@ class FunctionBlock;
 typedef std::unordered_map<std::string, llvm::AllocaInst*> ValTable;
 typedef std::shared_ptr<FunctionBlock> FuncPtr;
 typedef std::deque<FuncPtr> FuncStack;
+typedef std::unordered_map<std::string, llvm::Function*> FuncMap;
 typedef std::vector<llvm::Type*> TypeVec;
 typedef std::unordered_map<std::string, llvm::Type*> TypeTable;
 
