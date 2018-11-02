@@ -417,7 +417,6 @@ void Block::fixCalls(astVecMap &hiddenMap) {
 void semantic(astPtr root) {
     auto symtable = sem::initSymbolTable();
     root->semantic(symtable);
-    std::cerr << "Semantic analysis completed" << std::endl;
     return;
 }
 

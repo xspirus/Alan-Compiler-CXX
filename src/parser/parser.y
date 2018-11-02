@@ -224,7 +224,6 @@ void clearNodes() {
 ast::astPtr parse() {
     if ( yyparse() )
         return nullptr;
-    std::cout << "Lexical and Syntax Analysis Successful\n";
     ast::astPtr toRet = *t;
     clearNodes();
     return toRet;
