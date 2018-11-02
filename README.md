@@ -22,16 +22,16 @@ make alan-release
 
 ## Project Structure
 * main.cpp
-* src  
- * ast
- * lexer
- * parser
- * symbol
- * codegen
- * general
- * message
- * fix
- * lib
+* src
+  * ast
+  * lexer
+  * parser
+  * symbol
+  * codegen
+  * general
+  * message
+  * fix
+  * lib
 
 [cmake]: https://cmake.org/
 [clang]: https://clang.llvm.org/
