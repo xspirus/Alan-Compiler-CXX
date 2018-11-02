@@ -58,7 +58,7 @@ static llvm::Type *proc = llvm::Type::getVoidTy(TheContext);
  **************************** Function Declarations ****************************
  *******************************************************************************/
 
-void codegenLibs();
+static void codegenLibs();
 
 namespace ast {
 
