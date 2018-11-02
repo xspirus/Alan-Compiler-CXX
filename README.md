@@ -9,11 +9,17 @@ the year 2018.
 * Build Tool : [CMake][cmake]
 
 ## Versions
-* [GNU](https://www.gnu.org/software/gcc/) compiler (7.3.0)
+* [Clang][clang] (6.0.0)
 * Flex (2.5.4)
 * Bison (3.0.4)
 * [CMake][cmake] (3.10.2)
 * [LLVM][llvm] (6.0.0)
 
+# Build
+```bash
+make alan-release
+```
+
 [cmake]: https://cmake.org/
+[clang]: https://clang.llvm.org/
 [llvm]: https://llvm.org/
