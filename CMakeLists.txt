@@ -54,7 +54,7 @@ add_dependencies(ALAN LEXER PARSER)
 target_include_directories(ALAN 
     PRIVATE ${ALAN_COMPILER_INCLUDE_DIR} ${LLVM_INCLUDE_DIRS})
 target_compile_options(ALAN 
-    PRIVATE -Wall
+    PRIVATE -w
     )
 target_compile_definitions(ALAN
     PRIVATE ${LLVM_DEFINITIONS})
