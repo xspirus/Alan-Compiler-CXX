@@ -308,6 +308,7 @@ class Block : public Node {
  *******************************************************************************/
 
 void semantic(astPtr root);
+void codegen(astPtr root);
 
 } // namespace ast end
 
