@@ -6,6 +6,11 @@
 },
 {
   "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/ast/llvmIR.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/ast/llvmIR.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/ast/llvmIR.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
   "command": "/usr/bin/c++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wall -std=gnu++1z -o CMakeFiles/ALAN.dir/src/ast/semantic.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/ast/semantic.cpp",
   "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/ast/semantic.cpp"
 },
