@@ -4,9 +4,9 @@ National Technical University of Athens for
 the year 2018.
 
 ## Specifications
-* Language : [Alan](http://courses.softlab.ntua.gr/compilers/2018a/alan2018.pdf)
-* Implementation : C++17
-* Build Tool : [CMake][cmake]
+* **Language** : [Alan](http://courses.softlab.ntua.gr/compilers/2018a/alan2018.pdf)
+* **Implementation** : C++17
+* **Build Tool** : [CMake][cmake]
 
 ## Versions
 * [Clang][clang] (6.0.0)
@@ -21,25 +21,25 @@ make alan-release
 ```
 
 ## Project Structure
-* main.cpp
-* src
-  * ast  
+* **main**
+* **src**
+  * **ast**  
     Abstract Syntax Tree
-  * lexer  
+  * **lexer**  
     Lexical Analysis
-  * parser  
+  * **parser**  
     Syntax Analysis
-  * symbol  
+  * **symbol**  
     Semantic Analysis
-  * codegen  
+  * **codegen**  
     Codegen essentials
-  * general  
+  * **general**  
     General functions
-  * message  
+  * **message**  
     Errors, warnings, fatals, internals, debug
-  * fix  
+  * **fix**  
     Convert escaped chars to normal chars
-  * lib  
+  * **lib**  
     Define alan standard library functions
 
 [cmake]: https://cmake.org/
