@@ -42,6 +42,9 @@ make alan-release
   * **lib**  
     Define alan standard library functions
 
+## Developers
+* Spiros Dontas
+
 [cmake]: https://cmake.org/
 [clang]: https://clang.llvm.org/
 [llvm]: https://llvm.org/
