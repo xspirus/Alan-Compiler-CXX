@@ -23,15 +23,24 @@ make alan-release
 ## Project Structure
 * main.cpp
 * src
-  * ast
-  * lexer
-  * parser
-  * symbol
-  * codegen
-  * general
-  * message
-  * fix
-  * lib
+  * ast  
+    Abstract Syntax Tree
+  * lexer  
+    Lexical Analysis
+  * parser  
+    Syntax Analysis
+  * symbol  
+    Semantic Analysis
+  * codegen  
+    Codegen essentials
+  * general  
+    General functions
+  * message  
+    Errors, warnings, fatals, internals, debug
+  * fix  
+    Convert escaped chars to normal chars
+  * lib  
+    Define alan standard library functions
 
 [cmake]: https://cmake.org/
 [clang]: https://clang.llvm.org/
