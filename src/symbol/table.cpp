@@ -34,23 +34,23 @@ void Table::openScope(EntryPtr fun) {
     scopes.push_front(newShared<Scope>(nestingLevel, fun));
 }
 
+/*******************************************************************************
+ * For each entry name :
+ * > remove the entry with the same nesting
+ * > level as the scopes function
+ *
+ * We do not need to check what type of
+ * entry we are deleting, as functions are
+ * always inserted a level above the current
+ * scope and its parameters are kept in its
+ * own entry, so we can delete them.
+ *******************************************************************************/
 void Table::closeScope() {
     if ( scopes.empty() ) {
         warning("No scopes to close");
         return;
     }
     unsigned int nestingLevel = scopes.front()->nestingLevel;
-    /**
-     * For each entry name :
-     *   remove the entry with the same nesting
-     *   level as the scopes function
-     *
-     * We do not need to check what type of
-     * entry we are deleting, as functions are
-     * always inserted a level above the current
-     * scope and its parameters are kept in its
-     * own entry, so we can delete them.
-     */
     for ( auto& e : this->entries ) {
         auto& s = e.second;
         while ( !s.empty() ) {
@@ -59,9 +59,6 @@ void Table::closeScope() {
             s.pop_front();
         }
     }
-    /**
-     * Finally remove scope from stack
-     */
     scopes.pop_front();
 }
 

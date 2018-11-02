@@ -18,6 +18,30 @@
 
 #include <symbol/types.hpp>
 
+/*******************************************************************************
+ * 3 types of entries for Symbol Table :
+ *   - Variable :
+ *     - name
+ *     - type
+ *   - Parameter :
+ *     - name
+ *     - type
+ *     - passmode (value or reference)
+ *   - Function :
+ *     - name
+ *     - type
+ *     - number of returns :
+ *       > Needed for semantic analysis.
+ *       > A non proc function must have at least one return statement.
+ *     - params
+ *     - hidden parameters :
+ *       > Hidden parameters are parameters from a previous
+ *       > scope that we are going to find through semantic
+ *       > analysis. When we find them we need to pass them
+ *       > as reference parameters to the function so as not
+ *       > to intervene with llvm stack frames.
+ *******************************************************************************/
+
 namespace sem {
 
 /*******************************************************************************
