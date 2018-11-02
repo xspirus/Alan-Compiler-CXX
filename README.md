@@ -22,7 +22,7 @@ make alan-release
 
 ## Project Structure
 * main.cpp
-* src
+* src  
  * ast
  * lexer
  * parser
