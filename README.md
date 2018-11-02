@@ -15,10 +15,23 @@ the year 2018.
 * [CMake][cmake] (3.10.2)
 * [LLVM][llvm] (6.0.0)
 
-# Build
+## Build
 ```bash
 make alan-release
 ```
+
+## Project Structure
+* main.cpp
+* src
+ * ast
+ * lexer
+ * parser
+ * symbol
+ * codegen
+ * general
+ * message
+ * fix
+ * lib
 
 [cmake]: https://cmake.org/
 [clang]: https://clang.llvm.org/
