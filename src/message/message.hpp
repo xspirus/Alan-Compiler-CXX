@@ -22,6 +22,12 @@ typedef std::deque<std::string> stringStack;
 extern int    linecount;
 extern char * filename;
 
+/*******************************************************************************
+ * Variadic template functions must be declared and implemented in header
+ * file, or else the compiler does not know what is going on.
+ * Also C++17 folds are OP.
+ *******************************************************************************/
+
 template<typename ... Args>
 void display(Args&& ... args) {
     (std::cerr << ... << args) << std::endl;
@@ -69,6 +75,12 @@ void debug(Args&& ... args) {
 #endif
 }
 
+/*******************************************************************************
+ * Debugger class
+ *   > Helps with printing the ast.
+ *   > It does this while performing semantic analysis.
+ *   > It prints types too ( so cool ).
+ *******************************************************************************/
 class Debugger {
     private :
         std::string prefix = "| ";

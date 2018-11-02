@@ -19,6 +19,13 @@
 
 static Debugger debugger;
 
+/*******************************************************************************
+ * Perform semantic analysis for the AST.
+ * Calls semantic function for all nodes.
+ * Every node of the ast does something different to check semantic.
+ * Also can print AST via the Debugger class.
+ *******************************************************************************/
+
 namespace ast {
 
 static bool first = true;

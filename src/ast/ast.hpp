@@ -23,6 +23,58 @@
 
 extern int linecount;
 
+/*******************************************************************************
+ * Alan AST or Abstract Syntax Tree
+ * > Consists of a lot of different types of nodes :
+ *   - Int -> integer constant
+ *     > contains value
+ *   - Byte -> byte constant
+ *     > contains value
+ *   - String -> string literal
+ *     > contains value
+ *   - Var -> variable ( e.g. in `x = 1`, x is the variable )
+ *     > name
+ *     > index ( null for normal variables, set for array variables )
+ *   - BinOp -> binary operator ( +, -, *, /, % )
+ *     > operator
+ *     > lhs ( maybe null )
+ *     > rhs
+ *   - Condition -> TRUE, FALSE or operator ( &&, ||, !, <, <=, >, >=, ==, != )
+ *     > operator
+ *     > lhs ( maybe null )
+ *     > rhs ( maybe null, in case of TRUE, FALSE )
+ *   - IfElse -> if else statement ( else may be null )
+ *     > condition
+ *     > if body
+ *     > else body
+ *   - While -> while statement
+ *     > condition
+ *     > loop body
+ *   - Call -> function call
+ *     > name of function
+ *     > normal parameters
+ *     > hidden parameters ( i.e. needed -> check entry.hpp )
+ *   - Ret -> return statement
+ *     > expression of the return stmt ( e.g. return x + 5 -> expr = x + 5 )
+ *   - Assign -> variable assignment
+ *     > lvalue
+ *     > rvalue
+ *   - VarDecl -> variable declaration
+ *     > name
+ *   - Param -> typical parameter
+ *     > name
+ *     > mode ( by value or by reference )
+ *   - Func -> function
+ *     > main -> bool to tell first function
+ *     > name
+ *     > parameters
+ *     > hidden parameters
+ *     > declarations ( funcs and vars )
+ *     > body ( statements )
+ *   - Block -> compound statement
+ *     > vector of statements
+ *******************************************************************************/
+
 namespace ast {
 
 /*******************************************************************************

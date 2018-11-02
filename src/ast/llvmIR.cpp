@@ -50,6 +50,10 @@ static std::unique_ptr<llvm::Module> TheModule;
 static FuncStack genBlocks;
 static FuncMap functions;
 
+/*******************************************************************************
+ * Alan types for easier use.
+ * Also easy to get pointers by calling `type->getPointerTo()`
+ *******************************************************************************/
 static llvm::Type *i32 = llvm::Type::getInt32Ty(TheContext);
 static llvm::Type *i8 = llvm::Type::getInt8Ty(TheContext);
 static llvm::Type *proc = llvm::Type::getVoidTy(TheContext);
