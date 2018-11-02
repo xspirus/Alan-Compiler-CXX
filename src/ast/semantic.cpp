@@ -67,7 +67,6 @@ void String::semantic(sem::SymbolTable symtable) {
 void Var::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
     debugger.newLevel();
-    debugger.show("<Var, ", this->id, ">");
     /* Array Variable */
     if ( this->index != nullptr ) {
         this->index->semantic(symtable);
@@ -101,6 +100,7 @@ void Var::semantic(sem::SymbolTable symtable) {
     } else {
         this->type = entry->type->getRef();
     }
+    debugger.show("<Var, ", this->id, ", ", *this->type, ">");
     debugger.restoreLevel();
 }
 

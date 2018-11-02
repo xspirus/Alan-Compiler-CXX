@@ -23,16 +23,42 @@ FunctionBlock::FunctionBlock() {
 FunctionBlock::~FunctionBlock() {
 }
 
-void FunctionBlock::addVar(std::string name, llvm::AllocaInst *val) {
+void FunctionBlock::addArg(std::string name, sem::TypePtr type, sem::PassMode mode) {
+    auto *t = translateType(type, mode);
+    args.push_back(t);
+    vars[name] = t;
+}
+
+void FunctionBlock::addVar(std::string name, sem::TypePtr type) {
+    vars[name] = translateType(type);
+}
+
+void FunctionBlock::addVal(std::string name, llvm::AllocaInst *val) {
     this->vals[name] = val;
+}
+
+void FunctionBlock::addAddr(std::string name, llvm::AllocaInst *addr) {
+    this->addrs[name] = addr;
 }
 
 void FunctionBlock::setCurrentBlock(llvm::BasicBlock *BB) {
     this->currentBB = BB;
 }
 
-llvm::AllocaInst* FunctionBlock::getVar(std::string name) {
+TypeVec& FunctionBlock::getArgs() {
+    return this->args;
+}
+
+llvm::AllocaInst* FunctionBlock::getVal(std::string name) {
     return this->vals[name];
+}
+
+llvm::AllocaInst* FunctionBlock::getAddr(std::string name) {
+    return this->addrs[name];
+}
+
+bool FunctionBlock::isRef(std::string name) {
+    return this->vars[name]->isPointerTy();
 }
 
 llvm::BasicBlock* FunctionBlock::getCurrentBlock() {
