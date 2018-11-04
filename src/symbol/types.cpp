@@ -92,7 +92,7 @@ TypeArray::TypeArray(int size, TypePtr type) {
 }
 
 int TypeArray::getSize() {
-    return ( this->size * refType->getSize() );
+    return ( this->size );
 }
 
 TypePtr TypeArray::getRef() {
