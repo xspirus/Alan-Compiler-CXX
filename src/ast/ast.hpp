@@ -17,6 +17,8 @@
 #include <vector>
 #include <unordered_map>
 
+#include <llvm/IR/Value.h>
+
 #include <symbol/types.hpp>
 #include <symbol/entry.hpp>
 #include <symbol/table.hpp>
@@ -118,6 +120,7 @@ class Node {
         virtual ~Node() = default;
 
         virtual void semantic(sem::SymbolTable symtable) = 0;
+        virtual llvm::Value* codegen() = 0;
 
         virtual void fixCalls(astVecMap &hiddenMap);
 };
@@ -134,6 +137,7 @@ class Int : public Node {
         virtual ~Int() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 };
 
 /*******************************************************************************
@@ -148,6 +152,7 @@ class Byte : public Node {
         virtual ~Byte() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 };
 
 /*******************************************************************************
@@ -162,6 +167,7 @@ class String : public Node {
         virtual ~String() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 };
 
 /*******************************************************************************
@@ -177,6 +183,7 @@ class Var : public Node {
         virtual ~Var() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 };
 
 /*******************************************************************************
@@ -193,6 +200,7 @@ class BinOp : public Node {
         virtual ~BinOp() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 };
 
 /*******************************************************************************
@@ -209,6 +217,7 @@ class Condition : public Node {
         virtual ~Condition() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 };
 
 /*******************************************************************************
@@ -225,6 +234,7 @@ class IfElse : public Node {
         virtual ~IfElse() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 };
 
 /*******************************************************************************
@@ -240,6 +250,7 @@ class While : public Node {
         virtual ~While() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 };
 
 /*******************************************************************************
@@ -256,6 +267,7 @@ class Call : public Node {
         virtual ~Call() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 
         void fixCalls(astVecMap &hiddenMap) override;
 };
@@ -272,6 +284,7 @@ class Ret : public Node {
         virtual ~Ret() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 };
 
 /*******************************************************************************
@@ -287,6 +300,7 @@ class Assign : public Node {
         virtual ~Assign() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 };
 
 /*******************************************************************************
@@ -301,6 +315,7 @@ class VarDecl : public Node {
         virtual ~VarDecl() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 };
 
 /*******************************************************************************
@@ -316,6 +331,7 @@ class Param : public Node {
         virtual ~Param() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 };
 
 /*******************************************************************************
@@ -335,6 +351,7 @@ class Func : public Node {
         virtual ~Func() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 
         void fixCalls(astVecMap &hiddenMap) override;
 };
@@ -351,6 +368,7 @@ class Block : public Node {
         virtual ~Block() = default;
 
         void semantic(sem::SymbolTable symtable) override;
+        llvm::Value* codegen() override;
 
         void fixCalls(astVecMap &hiddenMap) override;
 };
