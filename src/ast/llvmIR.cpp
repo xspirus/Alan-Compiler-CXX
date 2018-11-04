@@ -96,7 +96,11 @@ void codegen(astPtr root) {
                                   "entry",
                                   mainFunc );
     root->codegen();
+    auto alanMain = std::dynamic_pointer_cast<ast::Func>(root);
+    auto *alanMainFunc = functions[alanMain->id];
+    std::vector<llvm::Value*> alanArgs;
     Builder.SetInsertPoint(mainBB);
+    Builder.CreateCall(alanMainFunc, alanArgs);
     Builder.CreateRet(llvm::ConstantInt::get(i32, 0));
     TheModule->print(llvm::outs(), nullptr);
 }
@@ -114,10 +118,7 @@ llvm::Value* Byte::codegen() {
 }
 
 llvm::Value* String::codegen() {
-    auto *global = Builder.CreateGlobalStringPtr(this->s);
-    auto *stralloca = Builder.CreateAlloca(i8->getPointerTo(), nullptr, this->s);
-    Builder.CreateStore(global, stralloca);
-    return stralloca;
+    return Builder.CreateGlobalStringPtr(this->s);
 }
 
 llvm::Value* Var::codegen() {
@@ -135,11 +136,12 @@ llvm::Value* Var::codegen() {
         auto *idx = this->index->codegen();
         if ( genBlocks.front()->isRef(this->id) ) {
             auto *ptr = Builder.CreateLoad(genBlocks.front()->getAddr(this->id));
-            return Builder.CreateGEP(ptr, idx);
+            auto *addr = Builder.CreateGEP(ptr, idx);
+            return Builder.CreateLoad(addr);
+        } else {
+            return Builder.CreateLoad(Builder.CreateGEP(genBlocks.front()->getVal(this->id),
+                                                        std::vector<llvm::Value*>{ c32(0), idx } ));
         }
-        else
-            return Builder.CreateGEP(genBlocks.front()->getVal(this->id),
-                                     std::vector<llvm::Value*>{ c32(0), idx } );
     }
     /* Fail */
     return nullptr;
@@ -170,9 +172,9 @@ llvm::Value* Condition::codegen() {
     lhs = nullptr;
     rhs = nullptr;
     if ( this->left != nullptr )
-        lhs = Builder.CreateIntCast(this->left->codegen(), i32, true);
+        lhs = Builder.CreateZExt(this->left->codegen(), i32);
     if ( this->right != nullptr )
-        rhs = Builder.CreateIntCast(this->right->codegen(), i32, true);
+        rhs = Builder.CreateZExt(this->right->codegen(), i32);
     switch ( this->op ) {
         case ast::Cond::TRU :
             return llvm::ConstantInt::get(i32, 1);
@@ -206,7 +208,7 @@ llvm::Value* IfElse::codegen() {
     /* condition */
     auto *CondV = this->cond->codegen();
     if ( !CondV->getType()->isIntegerTy(32) ) {
-        CondV = Builder.CreateIntCast(CondV, i32, true);
+        CondV = Builder.CreateZExt(CondV, i32);
     }
     CondV = Builder.CreateICmpEQ(CondV, c32(1));
     
@@ -226,16 +228,17 @@ llvm::Value* IfElse::codegen() {
     Builder.SetInsertPoint(ThenBB);
     genBlocks.front()->setCurrentBlock(ThenBB);
     this->ifBody->codegen();
-    Builder.CreateBr(MergeBB);
+    if ( !genBlocks.front()->hasReturn() )
+        Builder.CreateBr(MergeBB);
     
     /* else block */
-    if ( this->elseBody != nullptr ) {
-        TheFunction->getBasicBlockList().push_back(ElseBB);
-        Builder.SetInsertPoint(ElseBB);
-        genBlocks.front()->setCurrentBlock(ElseBB);
+    TheFunction->getBasicBlockList().push_back(ElseBB);
+    Builder.SetInsertPoint(ElseBB);
+    genBlocks.front()->setCurrentBlock(ElseBB);
+    if ( this->elseBody != nullptr )
         this->elseBody->codegen();
+    if ( !genBlocks.front()->hasReturn() )
         Builder.CreateBr(MergeBB);
-    }
 
     /* merge body */
     TheFunction->getBasicBlockList().push_back(MergeBB);
@@ -251,7 +254,7 @@ llvm::Value* While::codegen() {
     /* condition */
     auto *CondV = this->cond->codegen();
     if ( !CondV->getType()->isIntegerTy(32) ) {
-        CondV = Builder.CreateIntCast(CondV, i32, true);
+        CondV = Builder.CreateZExt(CondV, i32);
     }
     CondV = Builder.CreateICmpEQ(CondV, c32(1));
 
@@ -271,9 +274,9 @@ llvm::Value* While::codegen() {
     this->body->codegen();
     auto *nextCond = this->cond->codegen();
     if ( !nextCond->getType()->isIntegerTy(32) ) {
-        nextCond = Builder.CreateIntCast(nextCond, i32, true);
+        nextCond = Builder.CreateZExt(nextCond, i32);
     }
-    nextCond = Builder.CreateICmpEQ(CondV, c32(1));
+    nextCond = Builder.CreateICmpEQ(nextCond, c32(1));
     Builder.CreateCondBr(nextCond, LoopBB, AfterBB);
 
     /* after body */
@@ -285,10 +288,68 @@ llvm::Value* While::codegen() {
 }
 
 llvm::Value* Call::codegen() {
-    return nullptr;
+    llvm::Function *TheFunction = functions[this->id];
+    for ( auto &param : this->hidden ) {
+        this->params.push_back(param);
+    }
+    std::vector<llvm::Value*> callArgs;
+
+    int index = 0;
+    for ( auto &Arg : TheFunction->args() ) {
+        /* If argument by reference */
+        if ( Arg.getType()->isPointerTy() ) {
+            auto var = std::dynamic_pointer_cast<ast::Var>(this->params[index]);
+            /* Found variable */
+            if ( var ) {
+                if ( var->index == nullptr ) {
+                    if ( genBlocks.front()->isRef(var->id) ) {
+                        auto par = Builder.CreateLoad(genBlocks.front()->getAddr(var->id));
+                        callArgs.push_back(par);
+                    } else {
+                        llvm::Value *par;
+                        if ( genBlocks.front()->getVar(var->id)->isArrayTy() )
+                            par = Builder.CreateGEP( genBlocks.front()->getVal(var->id),
+                                                     std::vector<llvm::Value*>{ c32(0), c32(0) } );
+                        else
+                            par = genBlocks.front()->getVal(var->id);
+                        callArgs.push_back(par);
+                    }
+                } else {
+                    auto idx = var->index->codegen();
+                    if ( genBlocks.front()->isRef(var->id) ) {
+                        llvm::Value *par = Builder.CreateLoad(genBlocks.front()->getAddr(var->id));
+                        par = Builder.CreateGEP(par, idx);
+                        callArgs.push_back(par);
+                    } else {
+                        llvm::Value *par = genBlocks.front()->getVal(var->id);
+                        par = Builder.CreateGEP( par,
+                                                 std::vector<llvm::Value*>{ c32(0), idx } );
+                        callArgs.push_back(par);
+                    }
+                }
+                index++;
+                continue;
+            }
+            auto strlit = std::dynamic_pointer_cast<ast::String>(this->params[index]);
+            /* Found string literal */
+            if ( strlit ) {
+                callArgs.push_back(strlit->codegen());
+                index++;
+                continue;
+            }
+            linecount = this->line;
+            error("Expected variable or string literal");
+        } else {
+            auto par = this->params[index];
+            callArgs.push_back(par->codegen());
+            index++;
+        }
+    }
+    return Builder.CreateCall(TheFunction, callArgs);
 }
 
 llvm::Value* Ret::codegen() {
+    genBlocks.front()->addRet();
     return Builder.CreateRet(this->expr->codegen());
 }
 
@@ -332,6 +393,7 @@ llvm::Value* VarDecl::codegen() {
 
 llvm::Value* Param::codegen() {
     genBlocks.front()->addArg(this->id, this->type, this->mode);
+    genBlocks.front()->addVar(this->id, this->type, this->mode);
     return nullptr;
 }
 
@@ -390,6 +452,14 @@ llvm::Value* Func::codegen() {
 
     if ( func->getReturnType()->isVoidTy() )
         Builder.CreateRetVoid();
+    else {
+        if ( !genBlocks.front()->hasReturn() ) {
+            if ( func->getReturnType()->isIntegerTy(32) )
+                Builder.CreateRet(c32(0));
+            else
+                Builder.CreateRet(c8(0));
+        }
+    }
 
     genBlocks.pop_front();
 
@@ -566,7 +636,7 @@ llvm::Type* translateType(sem::TypePtr type, sem::PassMode mode) {
             ret = proc;
             break;
         case sem::genType::ARRAY :
-            ret = llvm::ArrayType::get(translateType(type->getRef()), 
+            ret = llvm::ArrayType::get( translateType(type->getRef()), 
                                         type->getSize() );
             break;
         case sem::genType::IARRAY :
