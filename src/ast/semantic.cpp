@@ -30,7 +30,9 @@ namespace ast {
 
 static bool first = true;
 
-void Node::fixCalls(astVecMap &hiddenMap) {
+astVecMap hiddenMap;
+
+void Node::fixCalls() {
     return;
 }
 
@@ -274,7 +276,7 @@ void Call::semantic(sem::SymbolTable symtable) {
     debugger.restoreLevel();
 }
 
-void Call::fixCalls(astVecMap &hiddenMap) {
+void Call::fixCalls() {
     for ( auto hid : hiddenMap[this->id] ) {
         auto temp = std::dynamic_pointer_cast<Param>(hid);
         auto v = newShared<Var>(temp->id, nullptr);
@@ -389,12 +391,11 @@ void Func::semantic(sem::SymbolTable symtable) {
     }
 }
 
-void Func::fixCalls(astVecMap &hiddenMap) {
+void Func::fixCalls() {
     hiddenMap[this->id] = this->hidden;
     for ( auto d : this->decls )
-        d->fixCalls(hiddenMap);
-    this->body->fixCalls(hiddenMap);
-    hiddenMap.erase(this->id);
+        d->fixCalls();
+    this->body->fixCalls();
 }
 
 /*******************************************************************************
@@ -412,9 +413,9 @@ void Block::semantic(sem::SymbolTable symtable) {
     return;
 }
 
-void Block::fixCalls(astVecMap &hiddenMap) {
+void Block::fixCalls() {
     for ( auto s : this->stmts )
-        s->fixCalls(hiddenMap);
+        s->fixCalls();
 }
 
 /*******************************************************************************
@@ -424,8 +425,7 @@ void Block::fixCalls(astVecMap &hiddenMap) {
 void semantic(astPtr root) {
     auto symtable = sem::initSymbolTable();
     root->semantic(symtable);
-    astVecMap hiddenMap;
-    root->fixCalls(hiddenMap);
+    root->fixCalls();
     return;
 }
 
