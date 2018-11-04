@@ -26,6 +26,7 @@
  ****************************** Project Includes *******************************
  *******************************************************************************/
 
+#include <general/general.hpp>
 #include <symbol/types.hpp>
 #include <symbol/entry.hpp>
 #include <ast/ast.hpp>
@@ -41,13 +42,13 @@
  **************************** Global File Variables ****************************
  *******************************************************************************/
 
-extern const char * filename;
+extern char * filename;
 
 static llvm::LLVMContext TheContext;
 static llvm::IRBuilder<> Builder(TheContext);
 static std::unique_ptr<llvm::Module> TheModule;
 
-static FuncStack genBlocks;
+static GenStack genBlocks;
 static FuncMap functions;
 
 /*******************************************************************************
@@ -57,6 +58,14 @@ static FuncMap functions;
 static llvm::Type *i32 = llvm::Type::getInt32Ty(TheContext);
 static llvm::Type *i8 = llvm::Type::getInt8Ty(TheContext);
 static llvm::Type *proc = llvm::Type::getVoidTy(TheContext);
+
+static inline llvm::Constant* c32(int n) {
+    return llvm::ConstantInt::get(i32, n);
+}
+
+static inline llvm::Constant* c8(unsigned char b) {
+    return llvm::ConstantInt::get(i8, b);
+}
 
 /*******************************************************************************
  **************************** Function Declarations ****************************
@@ -86,9 +95,314 @@ void codegen(astPtr root) {
         llvm::BasicBlock::Create( TheContext,
                                   "entry",
                                   mainFunc );
+    root->codegen();
     Builder.SetInsertPoint(mainBB);
     Builder.CreateRet(llvm::ConstantInt::get(i32, 0));
     TheModule->print(llvm::outs(), nullptr);
+}
+
+/*******************************************************************************
+ ***************************** AST Codegen Methods *****************************
+ *******************************************************************************/
+
+llvm::Value* Int::codegen() {
+    return c32(this->val);
+}
+
+llvm::Value* Byte::codegen() {
+    return c8(this->b);
+}
+
+llvm::Value* String::codegen() {
+    auto *global = Builder.CreateGlobalStringPtr(this->s);
+    auto *stralloca = Builder.CreateAlloca(i8->getPointerTo(), nullptr, this->s);
+    Builder.CreateStore(global, stralloca);
+    return stralloca;
+}
+
+llvm::Value* Var::codegen() {
+    /* Normal Variable First */
+    if ( this->index == nullptr ) {
+        if ( genBlocks.front()->isRef(this->id) ) {
+            auto *addr = Builder.CreateLoad(genBlocks.front()->getAddr(this->id));
+            return Builder.CreateLoad(addr);
+        } else {
+            return Builder.CreateLoad(genBlocks.front()->getVal(this->id));
+        }
+    }
+    /* Array Variable */
+    else {
+        auto *idx = this->index->codegen();
+        if ( genBlocks.front()->isRef(this->id) ) {
+            auto *ptr = Builder.CreateLoad(genBlocks.front()->getAddr(this->id));
+            return Builder.CreateGEP(ptr, idx);
+        }
+        else
+            return Builder.CreateGEP(genBlocks.front()->getVal(this->id),
+                                     std::vector<llvm::Value*>{ c32(0), idx } );
+    }
+    /* Fail */
+    return nullptr;
+}
+
+llvm::Value* BinOp::codegen() {
+    auto *lhs = this->left->codegen();
+    auto *rhs = this->right->codegen();
+    switch ( this->op ) {
+        case '+' :
+            return Builder.CreateAdd(lhs, rhs, "addtmp");
+        case '-' :
+            return Builder.CreateSub(lhs, rhs, "subtmp");
+        case '*' :
+            return Builder.CreateMul(lhs, rhs, "multmp");
+        case '/' :
+            return Builder.CreateSDiv(lhs, rhs, "divtmp");
+        case '%' :
+            return Builder.CreateSRem(lhs, rhs, "modtmp");
+        default :
+            return nullptr;
+    }
+    return nullptr;
+}
+
+llvm::Value* Condition::codegen() {
+    llvm::Value *lhs, *rhs;
+    lhs = nullptr;
+    rhs = nullptr;
+    if ( this->left != nullptr )
+        lhs = Builder.CreateIntCast(this->left->codegen(), i32, true);
+    if ( this->right != nullptr )
+        rhs = Builder.CreateIntCast(this->right->codegen(), i32, true);
+    switch ( this->op ) {
+        case ast::Cond::TRU :
+            return llvm::ConstantInt::get(i32, 1);
+        case ast::Cond::FALS :
+            return llvm::ConstantInt::get(i32, 0);
+        case ast::Cond::EQ :
+            return Builder.CreateICmpEQ(lhs, rhs, "eqtmp");
+        case ast::Cond::NEQ :
+            return Builder.CreateICmpNE(lhs, rhs, "neqtmp");
+        case ast::Cond::LT :
+            return Builder.CreateICmpSLT(lhs, rhs, "lttmp");
+        case ast::Cond::LE :
+            return Builder.CreateICmpSLE(lhs, rhs, "letmp");
+        case ast::Cond::GT :
+            return Builder.CreateICmpSGT(lhs, rhs, "gttmp");
+        case ast::Cond::GE :
+            return Builder.CreateICmpSGE(lhs, rhs, "getmp");
+        case ast::Cond::AND :
+            return Builder.CreateAnd(lhs, rhs, "andtmp");
+        case ast::Cond::OR :
+            return Builder.CreateOr(lhs, rhs, "ortmp");
+        case ast::Cond::NOT :
+            return Builder.CreateNot(rhs, "nottmp");
+    }
+    return nullptr;
+}
+
+llvm::Value* IfElse::codegen() {
+    llvm::Function *TheFunction = genBlocks.front()->getFunc();
+
+    /* condition */
+    auto *CondV = this->cond->codegen();
+    if ( !CondV->getType()->isIntegerTy(32) ) {
+        CondV = Builder.CreateIntCast(CondV, i32, true);
+    }
+    CondV = Builder.CreateICmpEQ(CondV, c32(1));
+    
+    llvm::BasicBlock *ThenBB = 
+        llvm::BasicBlock::Create( TheContext,
+                                  "then",
+                                  TheFunction );
+    llvm::BasicBlock *ElseBB =
+        llvm::BasicBlock::Create( TheContext,
+                                  "else" );
+    llvm::BasicBlock *MergeBB =
+        llvm::BasicBlock::Create( TheContext,
+                                  "merge" );
+    Builder.CreateCondBr(CondV, ThenBB, ElseBB);
+    
+    /* if block */
+    Builder.SetInsertPoint(ThenBB);
+    genBlocks.front()->setCurrentBlock(ThenBB);
+    this->ifBody->codegen();
+    Builder.CreateBr(MergeBB);
+    
+    /* else block */
+    if ( this->elseBody != nullptr ) {
+        TheFunction->getBasicBlockList().push_back(ElseBB);
+        Builder.SetInsertPoint(ElseBB);
+        genBlocks.front()->setCurrentBlock(ElseBB);
+        this->elseBody->codegen();
+        Builder.CreateBr(MergeBB);
+    }
+
+    /* merge body */
+    TheFunction->getBasicBlockList().push_back(MergeBB);
+    Builder.SetInsertPoint(MergeBB);
+    genBlocks.front()->setCurrentBlock(MergeBB);
+
+    return nullptr;
+}
+
+llvm::Value* While::codegen() {
+    llvm::Function *TheFunction = genBlocks.front()->getFunc();
+
+    /* condition */
+    auto *CondV = this->cond->codegen();
+    if ( !CondV->getType()->isIntegerTy(32) ) {
+        CondV = Builder.CreateIntCast(CondV, i32, true);
+    }
+    CondV = Builder.CreateICmpEQ(CondV, c32(1));
+
+    llvm::BasicBlock *LoopBB =
+        llvm::BasicBlock::Create( TheContext,
+                                  "loop",
+                                  TheFunction );
+    llvm::BasicBlock *AfterBB =
+        llvm::BasicBlock::Create( TheContext,
+                                  "after" );
+
+    Builder.CreateCondBr(CondV, LoopBB, AfterBB);
+
+    /* loop body */
+    Builder.SetInsertPoint(LoopBB);
+    genBlocks.front()->setCurrentBlock(LoopBB);
+    this->body->codegen();
+    auto *nextCond = this->cond->codegen();
+    if ( !nextCond->getType()->isIntegerTy(32) ) {
+        nextCond = Builder.CreateIntCast(nextCond, i32, true);
+    }
+    nextCond = Builder.CreateICmpEQ(CondV, c32(1));
+    Builder.CreateCondBr(nextCond, LoopBB, AfterBB);
+
+    /* after body */
+    TheFunction->getBasicBlockList().push_back(AfterBB);
+    Builder.SetInsertPoint(AfterBB);
+    genBlocks.front()->setCurrentBlock(AfterBB);
+
+    return nullptr;
+}
+
+llvm::Value* Call::codegen() {
+    return nullptr;
+}
+
+llvm::Value* Ret::codegen() {
+    return Builder.CreateRet(this->expr->codegen());
+}
+
+llvm::Value* Assign::codegen() {
+    auto lval = std::dynamic_pointer_cast<ast::Var>(left);
+    auto *rval = this->right->codegen();
+    /* Normal Variable */
+    if ( lval->index == nullptr ) {
+        if ( genBlocks.front()->isRef(lval->id) ) {
+            auto *addr = Builder.CreateLoad(genBlocks.front()->getAddr(lval->id));
+            return Builder.CreateStore(rval, addr);
+        } else {
+            return Builder.CreateStore(rval, genBlocks.front()->getVal(lval->id));
+        }
+    }
+    /* Array Variable */
+    else {
+        auto *idx = lval->index->codegen();
+        llvm::Value *val;
+        if ( genBlocks.front()->isRef(lval->id) ) {
+            val = Builder.CreateLoad(genBlocks.front()->getAddr(lval->id));
+            val = Builder.CreateGEP(val, idx);
+        }
+        else {
+            val = Builder.CreateGEP(genBlocks.front()->getVal(lval->id),
+                                    std::vector<llvm::Value*>{ c32(0), idx } );
+        }
+        return Builder.CreateStore(rval, val);
+    }
+    /* Fail */
+    return nullptr;
+}
+
+llvm::Value* VarDecl::codegen() {
+    auto *type = translateType(this->type);
+    auto *alloca = Builder.CreateAlloca(type, nullptr, this->id);
+    genBlocks.front()->addVar(this->id, this->type);
+    genBlocks.front()->addVal(this->id, alloca);
+    return nullptr;
+}
+
+llvm::Value* Param::codegen() {
+    genBlocks.front()->addArg(this->id, this->type, this->mode);
+    return nullptr;
+}
+
+llvm::Value* Func::codegen() {
+    GenPtr newBlock = newShared<GenBlock>();
+    genBlocks.push_front(newBlock);
+    for ( auto par : this->params )
+        par->codegen();
+    for ( auto hid : this->hidden ) {
+        auto hidpar = std::dynamic_pointer_cast<ast::Param>(hid);
+        hidpar->codegen();
+    }
+    llvm::FunctionType *ftype =
+        llvm::FunctionType::get( translateType(this->type),
+                                 genBlocks.front()->getArgs(),
+                                 false );
+    llvm::Function *func =
+        llvm::Function::Create( ftype,
+                                llvm::Function::ExternalLinkage,
+                                this->id,
+                                TheModule.get() );
+    genBlocks.front()->setFunc(func);
+    functions[this->id] = func;
+
+    int index = 0;
+    int hindex = 0;
+    for ( auto &Arg : func->args() ) {
+        if ( index == this->params.size() ) {
+            auto h = std::dynamic_pointer_cast<ast::Param>(this->hidden[hindex++]);
+            Arg.setName(h->id);
+        } else {
+            auto p = std::dynamic_pointer_cast<ast::Param>(this->params[index++]);
+            Arg.setName(p->id);
+        }
+    }
+
+    llvm::BasicBlock *FuncBB =
+        llvm::BasicBlock::Create( TheContext,
+                                  "entry",
+                                  func );
+    Builder.SetInsertPoint(FuncBB);
+    genBlocks.front()->setCurrentBlock(FuncBB);
+    for ( auto &Arg : func->args() ) {
+        auto *alloca = Builder.CreateAlloca( Arg.getType(),
+                                             nullptr,
+                                             Arg.getName() );
+        if ( Arg.getType()->isPointerTy() )
+            genBlocks.front()->addAddr(Arg.getName(), alloca);
+        else
+            genBlocks.front()->addVal(Arg.getName(), alloca);
+        Builder.CreateStore(&Arg, alloca);
+    }
+    for ( auto &decl : this->decls )
+        decl->codegen();
+    this->body->codegen();
+
+    if ( func->getReturnType()->isVoidTy() )
+        Builder.CreateRetVoid();
+
+    genBlocks.pop_front();
+
+    if ( !main )
+        Builder.SetInsertPoint(genBlocks.front()->getCurrentBlock());
+
+    return nullptr;
+}
+
+llvm::Value* Block::codegen() {
+    for ( auto &stmt : this->stmts )
+        stmt->codegen();
+    return nullptr;
 }
 
 }
@@ -239,6 +553,27 @@ void codegenLibs() {
                                 TheModule.get() );
 }
 
-llvm::Type* translateType(sem::TypePtr type, sem::PassMode) {
-    return llvm::Type::getVoidTy(TheContext);
+llvm::Type* translateType(sem::TypePtr type, sem::PassMode mode) {
+    llvm::Type *ret;
+    switch( type->t ) {
+        case sem::genType::INT :
+            ret = i32;
+            break;
+        case sem::genType::BYTE :
+            ret = i8;
+            break;
+        case sem::genType::VOID :
+            ret = proc;
+            break;
+        case sem::genType::ARRAY :
+            ret = llvm::ArrayType::get(translateType(type->getRef()), 
+                                        type->getSize() );
+            break;
+        case sem::genType::IARRAY :
+            ret = translateType(type->getRef());
+            break;
+    }
+    if ( mode == sem::PassMode::REFERENCE )
+        ret = ret->getPointerTo();
+    return ret;
 }
