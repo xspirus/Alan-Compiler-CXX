@@ -31,8 +31,18 @@
 },
 {
   "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/clang++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wno-all -Wno-extra -Wno-everything -std=gnu++1z -o CMakeFiles/ALAN.dir/src/lexer/lexer.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/lexer/lexer.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/lexer/lexer.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
   "command": "/usr/bin/clang++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wno-all -Wno-extra -Wno-everything -std=gnu++1z -o CMakeFiles/ALAN.dir/src/message/message.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/message/message.cpp",
   "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/message/message.cpp"
+},
+{
+  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
+  "command": "/usr/bin/clang++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wno-all -Wno-extra -Wno-everything -std=gnu++1z -o CMakeFiles/ALAN.dir/src/parser/parser.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/parser/parser.cpp",
+  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/parser/parser.cpp"
 },
 {
   "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
@@ -58,16 +68,6 @@
   "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
   "command": "/usr/bin/clang++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wno-all -Wno-extra -Wno-everything -std=gnu++1z -o CMakeFiles/ALAN.dir/main.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/main.cpp",
   "file": "/home/spirus/Documents/Alan-Compiler-CXX/main.cpp"
-},
-{
-  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/clang++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wno-all -Wno-extra -Wno-everything -std=gnu++1z -o CMakeFiles/ALAN.dir/src/lexer/lexer.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/lexer/lexer.cpp",
-  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/lexer/lexer.cpp"
-},
-{
-  "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
-  "command": "/usr/bin/clang++  -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -I/home/spirus/Documents/Alan-Compiler-CXX/src -I/usr/lib/llvm-6.0/include  -O3 -DNDEBUG   -Wno-all -Wno-extra -Wno-everything -std=gnu++1z -o CMakeFiles/ALAN.dir/src/parser/parser.cpp.o -c /home/spirus/Documents/Alan-Compiler-CXX/src/parser/parser.cpp",
-  "file": "/home/spirus/Documents/Alan-Compiler-CXX/src/parser/parser.cpp"
 },
 {
   "directory": "/home/spirus/Documents/Alan-Compiler-CXX/build",
