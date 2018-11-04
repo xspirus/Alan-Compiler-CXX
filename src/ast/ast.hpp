@@ -122,7 +122,7 @@ class Node {
         virtual void semantic(sem::SymbolTable symtable) = 0;
         virtual llvm::Value* codegen() = 0;
 
-        virtual void fixCalls(astVecMap &hiddenMap);
+        virtual void fixCalls();
 };
 
 /*******************************************************************************
@@ -269,7 +269,7 @@ class Call : public Node {
         void semantic(sem::SymbolTable symtable) override;
         llvm::Value* codegen() override;
 
-        void fixCalls(astVecMap &hiddenMap) override;
+        void fixCalls() override;
 };
 
 /*******************************************************************************
@@ -353,7 +353,7 @@ class Func : public Node {
         void semantic(sem::SymbolTable symtable) override;
         llvm::Value* codegen() override;
 
-        void fixCalls(astVecMap &hiddenMap) override;
+        void fixCalls() override;
 };
 
 /*******************************************************************************
@@ -370,7 +370,7 @@ class Block : public Node {
         void semantic(sem::SymbolTable symtable) override;
         llvm::Value* codegen() override;
 
-        void fixCalls(astVecMap &hiddenMap) override;
+        void fixCalls() override;
 };
 
 /*******************************************************************************
