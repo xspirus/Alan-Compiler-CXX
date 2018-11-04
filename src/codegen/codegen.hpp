@@ -39,21 +39,21 @@
  ****************************** Class Definitions ******************************
  *******************************************************************************/
 
-class FunctionBlock;
+class GenBlock;
 
 /*******************************************************************************
  ********************************** Typedefs ***********************************
  *******************************************************************************/
 
 typedef std::unordered_map<std::string, llvm::AllocaInst*> ValTable;
-typedef std::shared_ptr<FunctionBlock> FuncPtr;
-typedef std::deque<FuncPtr> FuncStack;
+typedef std::shared_ptr<GenBlock> GenPtr;
+typedef std::deque<GenPtr> GenStack;
 typedef std::unordered_map<std::string, llvm::Function*> FuncMap;
 typedef std::vector<llvm::Type*> TypeVec;
 typedef std::unordered_map<std::string, llvm::Type*> TypeTable;
 
 /*******************************************************************************
- * FunctionBlock Class
+ * GenBlock Class
  *   - args :
  *     > Used to hold argument types so that we can pass them to
  *     > `llvm::FunctionType::get( llvm::Type*,
@@ -70,16 +70,19 @@ typedef std::unordered_map<std::string, llvm::Type*> TypeTable;
  *   - currentBB :
  *     > The currentBasicBlock for this function.
  *******************************************************************************/
-class FunctionBlock {
+class GenBlock {
     private :
+        llvm::Function   *func;
         TypeVec           args;
         TypeTable         vars;
         ValTable          vals;
         ValTable          addrs;
         llvm::BasicBlock *currentBB;
     public :
-        FunctionBlock();
-        ~FunctionBlock();
+        GenBlock();
+        ~GenBlock();
+
+        void setFunc(llvm::Function *func);
 
         void addArg(std::string name, sem::TypePtr type, sem::PassMode mode);
         void addVar(std::string name, sem::TypePtr type);
@@ -87,10 +90,12 @@ class FunctionBlock {
         void addAddr(std::string name, llvm::AllocaInst *addr);
         void setCurrentBlock(llvm::BasicBlock *BB);
 
-        TypeVec& getArgs();
+        const TypeVec& getArgs() const;
         llvm::AllocaInst* getVal(std::string name);
         llvm::AllocaInst* getAddr(std::string name);
         bool isRef(std::string name);
+
+        llvm::Function* getFunc();
         llvm::BasicBlock* getCurrentBlock();
 };
 
