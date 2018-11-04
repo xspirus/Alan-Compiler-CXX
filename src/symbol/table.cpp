@@ -76,6 +76,11 @@ void Table::addParam(EntryPtr entry) {
 
 void Table::addHidden(EntryPtr entry) {
     unsigned int nestingLevel = entry->nestingLevel;
+    if ( entry->type->t == genType::ARRAY ) {
+        entry = newShared<EntryParameter>( entry->id,
+                                           newShared<TypeIArray>(entry->type->getRef()),
+                                           PassMode::REFERENCE );
+    }
     for ( unsigned int i = 0; i < scopes.size(); i++ ) {
         if ( scopes[i]->nestingLevel > nestingLevel )
             scopes[i]->getFunction()->addHidden(entry);
@@ -83,7 +88,13 @@ void Table::addHidden(EntryPtr entry) {
             break;
     }
     for ( unsigned int i = nestingLevel + 1; ; i++ ) {
-        auto temp = newShared<EntryParameter>(entry->id, entry->type, PassMode::REFERENCE);
+        EntryPtr temp;
+        if ( entry->type->t == genType::ARRAY )
+            temp = newShared<EntryParameter>( entry->id,
+                                              newShared<TypeIArray>(entry->type->getRef()),
+                                              PassMode::REFERENCE );
+        else
+            temp = newShared<EntryParameter>( entry->id, entry->type, PassMode::REFERENCE );
         temp->nestingLevel = i;
         entries[entry->id].push_front(temp);
         if ( i == scopes.front()->nestingLevel )
