@@ -424,6 +424,8 @@ void Block::fixCalls(astVecMap &hiddenMap) {
 void semantic(astPtr root) {
     auto symtable = sem::initSymbolTable();
     root->semantic(symtable);
+    astVecMap hiddenMap;
+    root->fixCalls(hiddenMap);
     return;
 }
 
