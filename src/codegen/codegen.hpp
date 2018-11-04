@@ -78,22 +78,26 @@ class GenBlock {
         ValTable          vals;
         ValTable          addrs;
         llvm::BasicBlock *currentBB;
+        bool              hasRet;
     public :
         GenBlock();
         ~GenBlock();
 
         void setFunc(llvm::Function *func);
-
-        void addArg(std::string name, sem::TypePtr type, sem::PassMode mode);
-        void addVar(std::string name, sem::TypePtr type);
-        void addVal(std::string name, llvm::AllocaInst *val);
-        void addAddr(std::string name, llvm::AllocaInst *addr);
         void setCurrentBlock(llvm::BasicBlock *BB);
 
+        void addArg(std::string name, sem::TypePtr type, sem::PassMode mode);
+        void addVar(std::string name, sem::TypePtr type, sem::PassMode mode = sem::PassMode::VALUE);
+        void addVal(std::string name, llvm::AllocaInst *val);
+        void addAddr(std::string name, llvm::AllocaInst *addr);
+        void addRet();
+
         const TypeVec& getArgs() const;
+        llvm::Type* getVar(std::string name);
         llvm::AllocaInst* getVal(std::string name);
         llvm::AllocaInst* getAddr(std::string name);
         bool isRef(std::string name);
+        bool hasReturn();
 
         llvm::Function* getFunc();
         llvm::BasicBlock* getCurrentBlock();

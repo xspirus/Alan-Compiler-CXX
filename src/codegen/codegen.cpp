@@ -17,8 +17,9 @@
 #include <llvm/IR/BasicBlock.h>
 
 GenBlock::GenBlock() {
-    this->func = nullptr;
+    this->func      = nullptr;
     this->currentBB = nullptr;
+    this->hasRet    = false;
 }
 
 GenBlock::~GenBlock() {
@@ -28,14 +29,19 @@ void GenBlock::setFunc(llvm::Function *func) {
     this->func = func;
 }
 
+void GenBlock::setCurrentBlock(llvm::BasicBlock *BB) {
+    this->currentBB = BB;
+    this->hasRet    = false;
+}
+
 void GenBlock::addArg(std::string name, sem::TypePtr type, sem::PassMode mode) {
     auto *t = translateType(type, mode);
     args.push_back(t);
     vars[name] = t;
 }
 
-void GenBlock::addVar(std::string name, sem::TypePtr type) {
-    vars[name] = translateType(type);
+void GenBlock::addVar(std::string name, sem::TypePtr type, sem::PassMode mode) {
+    vars[name] = translateType(type, mode);
 }
 
 void GenBlock::addVal(std::string name, llvm::AllocaInst *val) {
@@ -46,12 +52,16 @@ void GenBlock::addAddr(std::string name, llvm::AllocaInst *addr) {
     this->addrs[name] = addr;
 }
 
-void GenBlock::setCurrentBlock(llvm::BasicBlock *BB) {
-    this->currentBB = BB;
+void GenBlock::addRet() {
+    this->hasRet = true;
 }
 
 const TypeVec& GenBlock::getArgs() const {
     return this->args;
+}
+
+llvm::Type* GenBlock::getVar(std::string name) {
+    return this->vars[name];
 }
 
 llvm::AllocaInst* GenBlock::getVal(std::string name) {
@@ -64,6 +74,10 @@ llvm::AllocaInst* GenBlock::getAddr(std::string name) {
 
 bool GenBlock::isRef(std::string name) {
     return this->vars[name]->isPointerTy();
+}
+
+bool GenBlock::hasReturn() {
+    return this->hasRet;
 }
 
 llvm::Function* GenBlock::getFunc() {
