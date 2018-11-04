@@ -82,6 +82,13 @@ void Table::addHidden(EntryPtr entry) {
         else
             break;
     }
+    for ( unsigned int i = nestingLevel + 1; ; i++ ) {
+        auto temp = newShared<EntryParameter>(entry->id, entry->type, PassMode::REFERENCE);
+        temp->nestingLevel = i;
+        entries[entry->id].push_front(temp);
+        if ( i == scopes.front()->nestingLevel )
+            break;
+    }
 }
 
 void Table::insertEntry(EntryPtr entry) {
