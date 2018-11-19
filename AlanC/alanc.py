@@ -25,6 +25,7 @@ OPT = 'opt'
 LINKER = 'clang'
 
 TEMP = os.path.join(ALANDIR, 'tmp')
+EXECS = os.path.join(ALANDIR, 'execs')
 
 def args(argv) :
     inFile = ''
@@ -55,7 +56,9 @@ def main(argv) :
     if ( os.path.isdir(TEMP) ) :
         shutil.rmtree(TEMP)
     os.makedirs(TEMP)
+    os.makedirs(EXECS)
     tempLL, tempS = makeTempFiles(TEMP, outFile)
+    outFile = os.path.join(EXECS, outFile)
     sp.run([COMPILER, inFile], stdin=open(inFile), stdout=open(tempLL, 'w'))
     OPTCMD = [OPT, '-S', tempLL, '-o', tempLL]
     OPTCMD.extend(extras)
@@ -64,6 +67,8 @@ def main(argv) :
     sp.run(LLCCMD)
     LINKCMD = [LINKER, tempS, ALANLIB, '-o', outFile]
     sp.run(LINKCMD)
+    if ( os.path.isdir(TEMP) ) :
+        shutil.rmtree(TEMP)
 
 if __name__ == '__main__' :
     main(sys.argv[1:])
