@@ -209,6 +209,7 @@ program
 void yyerror(const char *msg) {
     fprintf(stderr, "Alan error: %s\n", msg);
     fprintf(stderr, "Aborting!\nYou made a stupid mistake in line %d\n", linecount);
+    exit(-1);
 }
 
 void clearNodes() {
