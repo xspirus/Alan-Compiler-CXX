@@ -18,6 +18,7 @@ the year 2018.
 ## Build
 ```bash
 make alan-release
+acc file.alan [-o name] [extra options]
 ```
 
 ## Project Structure
