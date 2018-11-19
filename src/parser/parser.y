@@ -19,7 +19,6 @@ std::vector<ast::astPtr*>  nodes;
 std::vector<ast::astVec*>  vecs;
 std::vector<sem::TypePtr*> types;
 
-ast::astPtr doParse();
 %}
 
 %union {
@@ -27,7 +26,7 @@ ast::astPtr doParse();
     int             n;
     unsigned char   c;
     char          * s;
-    sem::TypePtr       * t;
+    sem::TypePtr  * t;
     ast::astVec   * v;
 }
 
@@ -96,7 +95,7 @@ data_type
 
 type
     : data_type '[' ']' { $$ = new sem::TypePtr(newShared<sem::TypeIArray>(*$1)); types.push_back($$); }
-    | data_type         { $$ = $1;                                                                  }
+    | data_type         { $$ = $1;                                                                     }
     ;
 
 r_type
@@ -107,7 +106,7 @@ r_type
 cond
     : "true"         { $$ = new ast::astPtr(newShared<ast::Condition>(ast::Cond::TRU, nullptr, nullptr)); nodes.push_back($$);  }
     | "false"        { $$ = new ast::astPtr(newShared<ast::Condition>(ast::Cond::FALS, nullptr, nullptr)); nodes.push_back($$); }
-    | '(' cond ')'   { $$ = $2;                                                                                              }
+    | '(' cond ')'   { $$ = $2;                                                                                                 }
     | '!' cond       { $$ = new ast::astPtr(newShared<ast::Condition>(ast::Cond::NOT, nullptr, *$2)); nodes.push_back($$);      }
     | expr '<' expr  { $$ = new ast::astPtr(newShared<ast::Condition>(ast::Cond::LT, *$1, *$3)); nodes.push_back($$);           }
     | expr '>' expr  { $$ = new ast::astPtr(newShared<ast::Condition>(ast::Cond::GT, *$1, *$3)); nodes.push_back($$);           }
@@ -126,16 +125,16 @@ l_value
     ;
 
 expr
-    : T_const               { $$ = new ast::astPtr(newShared<ast::Int>($1)); nodes.push_back($$);                              }
-    | T_char                { $$ = new ast::astPtr(newShared<ast::Byte>($1)); nodes.push_back($$);                             }
-    | l_value               { $$ = $1;                                                                                      }
-    | '(' expr ')'          { $$ = $2;                                                                                      }
-    | func_call             { $$ = $1;                                                                                      }
-    | expr '+' expr         { $$ = new ast::astPtr(newShared<ast::BinOp>('+', *$1, *$3)); nodes.push_back($$);                 }
-    | expr '-' expr         { $$ = new ast::astPtr(newShared<ast::BinOp>('-', *$1, *$3)); nodes.push_back($$);                 }
-    | expr '*' expr         { $$ = new ast::astPtr(newShared<ast::BinOp>('*', *$1, *$3)); nodes.push_back($$);                 }
-    | expr '/' expr         { $$ = new ast::astPtr(newShared<ast::BinOp>('/', *$1, *$3)); nodes.push_back($$);                 }
-    | expr '%' expr         { $$ = new ast::astPtr(newShared<ast::BinOp>('%', *$1, *$3)); nodes.push_back($$);                 }
+    : T_const               { $$ = new ast::astPtr(newShared<ast::Int>($1)); nodes.push_back($$);                                 }
+    | T_char                { $$ = new ast::astPtr(newShared<ast::Byte>($1)); nodes.push_back($$);                                }
+    | l_value               { $$ = $1;                                                                                            }
+    | '(' expr ')'          { $$ = $2;                                                                                            }
+    | func_call             { $$ = $1;                                                                                            }
+    | expr '+' expr         { $$ = new ast::astPtr(newShared<ast::BinOp>('+', *$1, *$3)); nodes.push_back($$);                    }
+    | expr '-' expr         { $$ = new ast::astPtr(newShared<ast::BinOp>('-', *$1, *$3)); nodes.push_back($$);                    }
+    | expr '*' expr         { $$ = new ast::astPtr(newShared<ast::BinOp>('*', *$1, *$3)); nodes.push_back($$);                    }
+    | expr '/' expr         { $$ = new ast::astPtr(newShared<ast::BinOp>('/', *$1, *$3)); nodes.push_back($$);                    }
+    | expr '%' expr         { $$ = new ast::astPtr(newShared<ast::BinOp>('%', *$1, *$3)); nodes.push_back($$);                    }
     | '+' expr %prec UPLUS  { $$ = new ast::astPtr(newShared<ast::BinOp>('+', newShared<ast::Int>(0), *$2)); nodes.push_back($$); }
     | '-' expr %prec UMINUS { $$ = new ast::astPtr(newShared<ast::BinOp>('-', newShared<ast::Int>(0), *$2)); nodes.push_back($$); }
     ;
@@ -151,10 +150,10 @@ func_call
     ;
 
 stmt
-    : ';'                                 { $$ = nullptr;                                                                      }
+    : ';'                                 { $$ = nullptr;                                                                         }
     | l_value '=' expr ';'                { $$ = new ast::astPtr(newShared<ast::Assign>(*$1, *$3)); nodes.push_back($$);          }
-    | compound_stmt                       { $$ = $1;                                                                           }
-    | func_call ';'                       { $$ = $1;                                                                           }
+    | compound_stmt                       { $$ = $1;                                                                              }
+    | func_call ';'                       { $$ = $1;                                                                              }
     | "if" '(' cond ')' stmt %prec NOELSE { $$ = new ast::astPtr(newShared<ast::IfElse>(*$3, *$5, nullptr)); nodes.push_back($$); }
     | "if" '(' cond ')' stmt "else" stmt  { $$ = new ast::astPtr(newShared<ast::IfElse>(*$3, *$5, *$7)); nodes.push_back($$);     }
     | "while" '(' cond ')' stmt           { $$ = new ast::astPtr(newShared<ast::While>(*$3, *$5)); nodes.push_back($$);           }
