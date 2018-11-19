@@ -2,6 +2,8 @@
 build
 bin
 libs
+execs
+tmp
 *.plist
 *.clang-format
 lexer.cpp
