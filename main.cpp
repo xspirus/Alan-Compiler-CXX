@@ -21,11 +21,12 @@
 
 using namespace std;
 
-const char * filename = "TEST";
+const char * filename;
 
 extern ast::astPtr parse();
 
-int main() {
+int main(int argc, char *argv[]) {
+    filename = argv[1];
     auto root = parse();
     ast::semantic(root);
     ast::codegen(root);
