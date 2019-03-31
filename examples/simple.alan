@@ -3,20 +3,12 @@ test() : proc
     n : int;
     m : int;
 
-    test2() : proc
-
-        test3() : proc
-        {
-            n = n + 1;
-        }
-    {
-        m = m + 1;
-    }
-
-    c : int[10];
-
 {
-    n = 1;
-    while (n < 3)
-        n = n + 1;
+    n = readInteger();
+    m = readInteger();
+    if ( n > 5 )
+        writeInteger(n);
+    else
+        writeInteger(m);
+    writeString("\n");
 }

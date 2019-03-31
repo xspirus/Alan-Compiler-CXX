@@ -10,4 +10,5 @@ main() : proc
 {
     i = 1;
     inc(i);
+    writeInteger(i); writeString("\n");
 }
