@@ -209,7 +209,7 @@ def compile_executable(
 
 if __name__ == "__main__":
     args = parse_arguments()
-    root = updir(os.path.abspath(__file__), 3)
+    root = updir(os.path.abspath(os.path.realpath(__file__)), 3)
     compiler = os.path.join(root, "bin", "ALAN")
     lib = os.path.join(root, "libs", "libalanstd.a")
     opt = "opt-6.0"
