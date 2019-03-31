@@ -366,7 +366,7 @@ void Func::semantic(sem::SymbolTable symtable) {
     }
     linecount = this->line;
     debugger.show("<Function Declaration, ", this->id, ", ", *this->type, ">");
-    auto entry = symtable->lookupEntry(this->id, sem::Lookup::ALL, false);
+    auto entry = symtable->lookupEntry(this->id, sem::Lookup::CURRENT, false);
     if ( entry != nullptr ) {
         error("Duplicate identifier ", this->id);
         return;

@@ -103,6 +103,19 @@ class GenBlock {
         llvm::BasicBlock* getCurrentBlock();
 };
 
+class GenScope {
+    private:
+        std::deque<FuncMap> functions;
+    public:
+        GenScope();
+        ~GenScope();
+
+        void openScope();
+        void closeScope();
+        void addFunc(std::string id, llvm::Function *func);
+        llvm::Function* getFunc(std::string id);
+};
+
 extern llvm::Type* translateType(sem::TypePtr type, sem::PassMode mode = sem::PassMode::VALUE);
 
 #endif

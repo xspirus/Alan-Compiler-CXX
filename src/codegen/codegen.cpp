@@ -11,10 +11,15 @@
  *******************************************************************************/
 
 #include <codegen/codegen.hpp>
+#include <message/message.hpp>
 #include <memory>
 
 #include <llvm/IR/Instructions.h>
 #include <llvm/IR/BasicBlock.h>
+
+/*******************************************************************************
+ * GenBlock
+ *******************************************************************************/
 
 GenBlock::GenBlock() {
     this->func      = nullptr;
@@ -86,4 +91,35 @@ llvm::Function* GenBlock::getFunc() {
 
 llvm::BasicBlock* GenBlock::getCurrentBlock() {
     return this->currentBB;
+}
+
+/*******************************************************************************
+ * GenScope
+ *******************************************************************************/
+
+GenScope::GenScope() {  }
+
+GenScope::~GenScope() {  }
+
+void GenScope::openScope() {
+    this->functions.push_front(FuncMap());
+}
+
+void GenScope::closeScope() {
+    if (this->functions.empty()) {
+        warning("No scopes to close");
+        return;
+    }
+    this->functions.pop_front();
+}
+
+void GenScope::addFunc(std::string id, llvm::Function *func) {
+    this->functions.front()[id] = func;
+}
+
+llvm::Function* GenScope::getFunc(std::string id) {
+    for (auto funcs : this->functions) {
+        if (funcs.find(id) != funcs.end())
+            return funcs[id];
+    }
 }
