@@ -1,4 +1,4 @@
-# C++ Environment
+# ----------------------------- C++ Environment ------------------------------ #
 build
 bin
 libs
@@ -11,13 +11,8 @@ parser.cpp
 parser.hpp
 parser.output
 
-# Python Environment
-build
-bin
-lib
-lib64
-share
-*.cfg
+# ------------------------------- Python Venv -------------------------------- #
+.venv
 
-# Alan Lib
-!src/lib
+# ---------------------------------- VSCode ---------------------------------- #
+.vscode
