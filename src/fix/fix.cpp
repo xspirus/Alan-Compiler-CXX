@@ -31,14 +31,16 @@ static unsigned char fixHex(char * s) {
 }
 
 unsigned char fixChar(char * s, int& shift) {
-    if ( s[0] != '\\' )
+    if ( s[0] != '\\' ) {
         shift = 1;
         return s[0];
-    if ( s[1] == 'x' )
+    }
+    if ( s[1] == 'x' ) {
         shift = 4;
         return fixHex(s + 2);
+    }
+    shift = 2;
     switch( s[1] ) {
-        shift = 2;
         case 'n'  : return '\n';
         case 't'  : return '\t';
         case 'r'  : return '\r';

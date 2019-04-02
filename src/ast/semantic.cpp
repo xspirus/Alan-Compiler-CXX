@@ -10,20 +10,29 @@
  *                                                                             *
  *******************************************************************************/
 
-// #include <error/error.hpp>
 #include <message/message.hpp>
 #include <ast/ast.hpp>
+#include <general/general.hpp>
 
 #include <iostream>
 #include <vector>
 
 static Debugger debugger;
 
+/*******************************************************************************
+ * Perform semantic analysis for the AST.
+ * Calls semantic function for all nodes.
+ * Every node of the ast does something different to check semantic.
+ * Also can print AST via the Debugger class.
+ *******************************************************************************/
+
 namespace ast {
 
 static bool first = true;
 
-void Node::fixCalls(astVecMap &hiddenMap) {
+astVecMap hiddenMap;
+
+void Node::fixCalls() {
     return;
 }
 
@@ -33,7 +42,7 @@ void Node::fixCalls(astVecMap &hiddenMap) {
 
 void Int::semantic(sem::SymbolTable symtable) {
     debugger.newLevel();
-    debugger.show("<Integer>\n");
+    debugger.show("<Integer, ", this->val, ">");
     debugger.restoreLevel();
     return;
 }
@@ -44,7 +53,7 @@ void Int::semantic(sem::SymbolTable symtable) {
 
 void Byte::semantic(sem::SymbolTable symtable) {
     debugger.newLevel();
-    debugger.show("<Byte>\n");
+    debugger.show("<Byte, ", (int)this->b, ">");
     debugger.restoreLevel();
     return;
 }
@@ -55,7 +64,7 @@ void Byte::semantic(sem::SymbolTable symtable) {
 
 void String::semantic(sem::SymbolTable symtable) {
     debugger.newLevel();
-    debugger.show("<String Literal>\n");
+    debugger.show("<String Literal, ", this->s, ">");
     debugger.restoreLevel();
     return;
 }
@@ -67,12 +76,11 @@ void String::semantic(sem::SymbolTable symtable) {
 void Var::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
     debugger.newLevel();
-    debugger.show("<Var>\n");
     /* Array Variable */
     if ( this->index != nullptr ) {
         this->index->semantic(symtable);
         if ( !sem::equalType(this->index->type, sem::typeInteger) ) {
-            error("Array index must be of integer type\n");
+            error("Array index must be of integer type");
             return;
         }
     }
@@ -81,7 +89,7 @@ void Var::semantic(sem::SymbolTable symtable) {
      */
     auto entry = symtable->lookupEntry(this->id, sem::Lookup::ALL, true);
     if ( entry->eType == sem::EntryType::FUNCTION ) {
-        error("Not a variable/parameter\n");
+        error("Not a variable/parameter");
         return;
     }
     /**
@@ -101,6 +109,7 @@ void Var::semantic(sem::SymbolTable symtable) {
     } else {
         this->type = entry->type->getRef();
     }
+    debugger.show("<Var, ", this->id, ", ", *this->type, ">");
     debugger.restoreLevel();
 }
 
@@ -111,7 +120,7 @@ void Var::semantic(sem::SymbolTable symtable) {
 void BinOp::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
     debugger.newLevel();
-    debugger.show("<BinOp>\n");
+    debugger.show("<BinOp>");
     /**
      * Perform semantic analysis
      * of the two operands
@@ -123,7 +132,7 @@ void BinOp::semantic(sem::SymbolTable symtable) {
      *   - must be of same type
      */
     if ( !sem::equalType(this->left->type, this->right->type) ) {
-        error("Binary operation operands must of same type\n");
+        error("Binary operation operands must of same type");
         return;
     }
     this->type = this->left->type;
@@ -137,7 +146,7 @@ void BinOp::semantic(sem::SymbolTable symtable) {
 void Condition::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
     debugger.newLevel();
-    debugger.show("<Condition>\n");
+    debugger.show("<Condition>");
     switch(this->op) {
         case Cond::NOT :
             this->right->semantic(symtable);
@@ -154,19 +163,20 @@ void Condition::semantic(sem::SymbolTable symtable) {
             if ( !sem::equalType(this->left->type, sem::typeByte)
                     || !sem::equalType(this->right->type, sem::typeByte)
                ) {
-                error("Condition is not of type byte\n");
+                error("Condition is not of type byte");
                 return;
             }
             this->type = sem::typeByte;
             break;
         case Cond::TRU :
         case Cond::FALS :
+            this->type = sem::typeByte;
             break;
         default :
             this->left->semantic(symtable);
             this->right->semantic(symtable);
             if ( !sem::equalType(this->left->type, this->right->type) ) {
-                error("Expressions of different types\n");
+                error("Expressions of different types");
                 return;
             }
             this->type = sem::typeByte;
@@ -182,7 +192,7 @@ void Condition::semantic(sem::SymbolTable symtable) {
 void IfElse::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
     debugger.newLevel();
-    debugger.show("<IfElse>\n");
+    debugger.show("<IfElse>");
     /**
      * Perform semantic analysis in the order :
      *   - condition (performs necessary checks)
@@ -191,7 +201,7 @@ void IfElse::semantic(sem::SymbolTable symtable) {
      */
     this->cond->semantic(symtable);
     if ( !sem::equalType(this->cond->type, sem::typeByte) ) {
-        error("If condition expects a boolean expression\n");
+        error("If condition expects a boolean expression");
         return;
     }
     this->ifBody->semantic(symtable);
@@ -208,7 +218,7 @@ void IfElse::semantic(sem::SymbolTable symtable) {
 void While::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
     debugger.newLevel();
-    debugger.show("<While>\n");
+    debugger.show("<While>");
     /**
      * Perform semantic analysis in the order :
      *   - condition
@@ -216,7 +226,7 @@ void While::semantic(sem::SymbolTable symtable) {
      */
     this->cond->semantic(symtable);
     if ( !sem::equalType(this->cond->type, sem::typeByte) ) {
-        error("While condition expects boolean expression\n");
+        error("While condition expects boolean expression");
         return;
     }
     this->body->semantic(symtable);
@@ -230,20 +240,20 @@ void While::semantic(sem::SymbolTable symtable) {
 void Call::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
     debugger.newLevel();
-    debugger.show("<FunctionCall, ", this->id, ">\n");
+    debugger.show("<FunctionCall, ", this->id, ">");
     auto entry = symtable->lookupEntry(this->id, sem::Lookup::ALL, true);
     if ( entry->eType != sem::EntryType::FUNCTION ) {
-        error(this->id, " is not a function\n");
+        error(this->id, " is not a function");
         return;
     }
     /**
      * Check number of params
      */
     if ( this->params.size() < entry->getParams().size() ) {
-        error("Not enough arguments\n");
+        error("Not enough arguments");
         return;
     } else if ( this->params.size() > entry->getParams().size() ) {
-        error("Too many arguments\n");
+        error("Too many arguments");
         return;
     }
     /**
@@ -258,7 +268,7 @@ void Call::semantic(sem::SymbolTable symtable) {
     auto& pars = entry->getParams();
     for ( int i = 0; i < this->params.size(); i++ ) {
         if ( !sem::compatibleType(this->params[i]->type, pars[i]->type) ) {
-            error("Type mismatch in parameter ", pars[i]->id, "\nExpected ", this->params[i]->type, "\n");
+            error("Type mismatch in parameter ", pars[i]->id, "\nExpected ", this->params[i]->type);
             return;
         }
     }
@@ -266,10 +276,10 @@ void Call::semantic(sem::SymbolTable symtable) {
     debugger.restoreLevel();
 }
 
-void Call::fixCalls(astVecMap &hiddenMap) {
+void Call::fixCalls() {
     for ( auto hid : hiddenMap[this->id] ) {
         auto temp = std::dynamic_pointer_cast<Param>(hid);
-        auto v = std::make_shared<Var>(temp->id, nullptr);
+        auto v = newShared<Var>(temp->id, nullptr);
         v->type = temp->type;
         this->hidden.push_back(v);
     }
@@ -282,11 +292,11 @@ void Call::fixCalls(astVecMap &hiddenMap) {
 void Ret::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
     debugger.newLevel();
-    debugger.show("<Return>\n");
+    debugger.show("<Return>");
     this->expr->semantic(symtable);
     this->type = this->expr->type;
     if ( !sem::compatibleType(this->type, symtable->scopeType()) ) {
-        error("Type mismatch in function return\n");
+        error("Type mismatch in function return");
         return;
     }
     symtable->addReturn();
@@ -300,11 +310,11 @@ void Ret::semantic(sem::SymbolTable symtable) {
 void Assign::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
     debugger.newLevel();
-    debugger.show("<Assignment>\n");
+    debugger.show("<Assignment>");
     this->left->semantic(symtable);
     this->right->semantic(symtable);
     if ( !sem::equalType(this->left->type, this->right->type) ) {
-        error("Type mismatch in assignment\n");
+        error("Type mismatch in assignment");
         return;
     }
     this->type = this->left->type;
@@ -318,13 +328,13 @@ void Assign::semantic(sem::SymbolTable symtable) {
 void VarDecl::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
     debugger.newLevel();
-    debugger.show("<VarDecl, ", this->id, ", ", this->type, ">\n");
+    debugger.show("<VarDecl, ", this->id, ", ", *this->type, ">");
     auto entry = symtable->lookupEntry(this->id, sem::Lookup::CURRENT, false);
     if ( entry != nullptr ) {
-        error("Duplicate identifier ", this->id, "\n");
+        error("Duplicate identifier ", this->id);
         return;
     }
-    symtable->insertEntry(std::make_shared<sem::EntryVariable>(this->id, this->type));
+    symtable->insertEntry(newShared<sem::EntryVariable>(this->id, this->type));
     debugger.restoreLevel();
 }
 
@@ -335,8 +345,8 @@ void VarDecl::semantic(sem::SymbolTable symtable) {
 void Param::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
     debugger.newLevel();
-    debugger.show("<Parameter, ", this->id, ", ", this->type, ">\n");
-    auto p = std::make_shared<sem::EntryParameter>(this->id, this->type, this->mode);
+    debugger.show("<Parameter, ", this->id, ", ", *this->type, ">");
+    auto p = newShared<sem::EntryParameter>(this->id, this->type, this->mode);
     symtable->insertEntry(p);
     symtable->addParam(p);
     debugger.restoreLevel();
@@ -355,13 +365,13 @@ void Func::semantic(sem::SymbolTable symtable) {
         debugger.newLevel();
     }
     linecount = this->line;
-    debugger.show("<Function Declaration, ", this->id, ", ", this->type, ">\n");
-    auto entry = symtable->lookupEntry(this->id, sem::Lookup::ALL, false);
+    debugger.show("<Function Declaration, ", this->id, ", ", *this->type, ">");
+    auto entry = symtable->lookupEntry(this->id, sem::Lookup::CURRENT, false);
     if ( entry != nullptr ) {
-        error("Duplicate identifier ", this->id, "\n");
+        error("Duplicate identifier ", this->id);
         return;
     }
-    auto fun = std::make_shared<sem::EntryFunction>(this->id, this->type);
+    auto fun = newShared<sem::EntryFunction>(this->id, this->type);
     symtable->insertEntry(fun);
     symtable->openScope(fun);
     for ( auto p : this->params ) {
@@ -373,7 +383,7 @@ void Func::semantic(sem::SymbolTable symtable) {
     this->body->semantic(symtable);
     entry = symtable->lookupEntry(this->id, sem::Lookup::ALL, false);
     for ( auto hid : entry->getHidden() ) {
-        this->hidden.push_back(std::make_shared<Param>(hid->id, sem::PassMode::REFERENCE, hid->type));
+        this->hidden.push_back(newShared<Param>(hid->id, sem::PassMode::REFERENCE, hid->type));
     }
     symtable->closeScope();
     if ( !this->main ) {
@@ -381,12 +391,11 @@ void Func::semantic(sem::SymbolTable symtable) {
     }
 }
 
-void Func::fixCalls(astVecMap &hiddenMap) {
+void Func::fixCalls() {
     hiddenMap[this->id] = this->hidden;
     for ( auto d : this->decls )
-        d->fixCalls(hiddenMap);
-    this->body->fixCalls(hiddenMap);
-    hiddenMap.erase(this->id);
+        d->fixCalls();
+    this->body->fixCalls();
 }
 
 /*******************************************************************************
@@ -396,7 +405,7 @@ void Func::fixCalls(astVecMap &hiddenMap) {
 void Block::semantic(sem::SymbolTable symtable) {
     linecount = this->line;
     debugger.newLevel();
-    debugger.show("<Block Statement>\n");
+    debugger.show("<Block Statement>");
     for ( auto s : this->stmts ) {
         s->semantic(symtable);
     }
@@ -404,9 +413,9 @@ void Block::semantic(sem::SymbolTable symtable) {
     return;
 }
 
-void Block::fixCalls(astVecMap &hiddenMap) {
+void Block::fixCalls() {
     for ( auto s : this->stmts )
-        s->fixCalls(hiddenMap);
+        s->fixCalls();
 }
 
 /*******************************************************************************
@@ -416,7 +425,7 @@ void Block::fixCalls(astVecMap &hiddenMap) {
 void semantic(astPtr root) {
     auto symtable = sem::initSymbolTable();
     root->semantic(symtable);
-    std::cerr << "Semantic analysis completed" << std::endl;
+    root->fixCalls();
     return;
 }
 

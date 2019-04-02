@@ -1,4 +1,18 @@
+# ----------------------------- C++ Environment ------------------------------ #
 build
 bin
+libs
+execs
+tmp
 *.plist
-.ycm_extra_conf.py
+*.clang-format
+lexer.cpp
+parser.cpp
+parser.hpp
+parser.output
+
+# ------------------------------- Python Venv -------------------------------- #
+.venv
+
+# ---------------------------------- VSCode ---------------------------------- #
+.vscode

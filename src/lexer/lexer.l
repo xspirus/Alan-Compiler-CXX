@@ -50,13 +50,17 @@ ESC [ntr0\'\"\\]
 \"(\\.|[^\\"])*\"           { yylval.s = fixString(yytext + 1)             ; return T_string; }
 
  /* Comments */
-\-\-.*\n             { ++linecount;                                               }
-"(*"                 { BEGIN(COMMENT);                                            }
-<COMMENT>"(*"        { ++nested_comment;                                          }
-<COMMENT>"*)"        { if (nested_comment) --nested_comment; else BEGIN(INITIAL); }
-<COMMENT>\n          { ++linecount;                                               }
-<COMMENT>"*"         { /* nothing */                                              }
-<COMMENT>[^{(*}*\n]+ { /* nothing */                                              }
+\-\-.*\n              { ++linecount;                                               }
+"(*"                  { BEGIN(COMMENT);                                            }
+<COMMENT>"(*"         { ++nested_comment;                                          }
+<COMMENT>"*)"         { if (nested_comment) --nested_comment; else BEGIN(INITIAL); }
+<COMMENT>\n           { ++linecount;                                               }
+ /* Eat up stars not followed by stars or parenthesis */
+<COMMENT>"*"+[^*)\n]* { /* nothing */                                              }
+ /* Eat up parenthesis not followed by star */
+<COMMENT>"("+[^*\n]*  { /* nothing */                                              }
+ /* Anything that is not a star or parentesis */
+<COMMENT>[^(*\n]+     { /* nothing */                                              }
 
  /* WhiteSpace */
 \n   { ++linecount;            }

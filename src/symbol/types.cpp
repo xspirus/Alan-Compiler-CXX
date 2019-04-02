@@ -13,7 +13,8 @@
 #include <iostream>
 
 #include <symbol/types.hpp>
-#include <error/error.hpp>
+#include <message/message.hpp>
+#include <general/general.hpp>
 
 namespace sem {
 
@@ -42,9 +43,8 @@ int TypeVoid::getSize() {
     return -1;
 }
 
-std::ostream &TypeVoid::print(std::ostream &out) const {
-    out << "void";
-    return out;
+std::ostream& TypeVoid::print(std::ostream &out) const {
+    return ( out << "proc" );
 }
 
 /*******************************************************************************
@@ -59,9 +59,8 @@ int TypeInt::getSize() {
     return INT_SIZE;
 }
 
-std::ostream &TypeInt::print(std::ostream &out) const {
-    out << "integer";
-    return out;
+std::ostream& TypeInt::print(std::ostream &out) const {
+    return ( out << "int" );
 }
 
 /*******************************************************************************
@@ -76,9 +75,8 @@ int TypeByte::getSize() {
     return BYTE_SIZE;
 }
 
-std::ostream &TypeByte::print(std::ostream &out) const {
-    out << "byte";
-    return out;
+std::ostream& TypeByte::print(std::ostream &out) const {
+    return ( out << "byte" );
 }
 
 /*******************************************************************************
@@ -94,16 +92,15 @@ TypeArray::TypeArray(int size, TypePtr type) {
 }
 
 int TypeArray::getSize() {
-    return ( this->size * refType->getSize() );
+    return ( this->size );
 }
 
 TypePtr TypeArray::getRef() {
     return this->refType;
 }
 
-std::ostream &TypeArray::print(std::ostream &out) const {
-    out << "array of " << *refType << "[" << size << "]";
-    return out;
+std::ostream& TypeArray::print(std::ostream &out) const {
+    return ( out << "array of " << *this->refType << "[" << this->size << "]" );
 }
 
 /*******************************************************************************
@@ -112,7 +109,7 @@ std::ostream &TypeArray::print(std::ostream &out) const {
 
 TypeIArray::TypeIArray(TypePtr type) {
     if (type->t == genType::VOID)
-        error("Array cannot be of type void");
+        error("Array cannot be of type void\n");
     this->t = genType::IARRAY;
     this->refType = type;
 }
@@ -125,9 +122,8 @@ TypePtr TypeIArray::getRef() {
     return this->refType;
 }
 
-std::ostream &TypeIArray::print(std::ostream &out) const {
-    out << "iarray of " << *refType << "[]";
-    return out;
+std::ostream& TypeIArray::print(std::ostream &out) const {
+    return ( out << "iarray of " << *this->refType );
 }
 
 /*******************************************************************************
@@ -170,8 +166,8 @@ bool compatibleType(TypePtr a, TypePtr b) {
  ******************************* Constant Types ********************************
  *******************************************************************************/
 
-TypePtr typeInteger = std::make_shared<TypeInt>();
-TypePtr typeByte    = std::make_shared<TypeByte>();
-TypePtr typeVoid    = std::make_shared<TypeVoid>();
+TypePtr typeInteger = newShared<TypeInt>();
+TypePtr typeByte    = newShared<TypeByte>();
+TypePtr typeVoid    = newShared<TypeVoid>();
 
 } // end namespace sem

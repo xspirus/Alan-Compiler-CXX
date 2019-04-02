@@ -14,7 +14,7 @@
 #include <memory>
 #include <vector>
 
-#include <error/error.hpp>
+#include <message/message.hpp>
 #include <symbol/types.hpp>
 #include <symbol/entry.hpp>
 
@@ -25,44 +25,44 @@ namespace sem {
  *******************************************************************************/
 
 int Entry::getOffset() {
-    error("Not a variable/parameter");
+    error("Not a variable/parameter (", this->id, ")");
     return -1;
 }
 
 void Entry::setOffset(int offset) {
-    error("Not a variable/parameter");
+    error("Not a variable/parameter (", this->id, ")");
 }
 
 int Entry::getReturns() {
-    error("Not a function");
+    error("Not a function (", this->id, ")");
     return -1;
 }
 
 const EntryVector& Entry::getParams() const {
-    error("Not a function");
+    error("Not a function (", this->id, ")");
 }
 
 const EntryVector& Entry::getHidden() const {
-    error("Not a function");
+    error("Not a function (", this->id, ")");
 }
 
 PassMode Entry::getMode() {
-    error("Not a parameter");
+    error("Not a parameter (", this->id, ")");
     return PassMode::VALUE;
 }
 
 void Entry::addParam(EntryPtr param) {
-    error("Not a function");
+    error("Not a function (", this->id, ")");
     return;
 }
 
 void Entry::addHidden(EntryPtr entry) {
-    error("Not a function");
+    error("Not a function (", this->id, ")");
     return;
 }
 
 void Entry::addReturn() {
-    error("Not a function");
+    error("Not a function (", this->id, ")");
     return;
 }
 
