@@ -22,6 +22,8 @@ ESC [ntr0\'\"\\]
 
 %x COMMENT
 
+%option noyywrap
+
 %%
 
  /* Keywords */

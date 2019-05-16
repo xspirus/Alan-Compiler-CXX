@@ -33,7 +33,7 @@ llvm_map_components_to_libnames(LLVM_LIBS core)
 # message(${BISON_DIR})
 
 add_custom_target(LEXER ALL 
-    COMMAND flex -o${FLEX_DIR}/lexer.cpp ${FLEX_DIR}/lexer.l
+    COMMAND flex -o ${FLEX_DIR}/lexer.cpp ${FLEX_DIR}/lexer.l
     )
 add_custom_target(PARSER ALL
     COMMAND bison -dv -o ${BISON_DIR}/parser.cpp ${BISON_DIR}/parser.y
@@ -70,7 +70,7 @@ target_compile_options(ALAN
     )
 target_compile_definitions(ALAN
     PRIVATE ${LLVM_DEFINITIONS})
-target_link_libraries(ALAN "fl" "${LLVM_LIBS}")
+target_link_libraries(ALAN "${LLVM_LIBS}")
 
 add_custom_command(
     TARGET ALAN
