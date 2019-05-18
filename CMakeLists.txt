@@ -56,6 +56,7 @@ target_compile_options(alanstd
       -Wno-all
       -Wno-extra
       -Wno-everything
+      -fPIC
     )
 
 add_executable(ALAN ${SOURCE_FILES})
@@ -67,6 +68,7 @@ target_compile_options(ALAN
       -Wno-all
       -Wno-extra
       -Wno-everything
+      -fPIC
     )
 target_compile_definitions(ALAN
     PRIVATE ${LLVM_DEFINITIONS})

@@ -204,7 +204,7 @@ def compile_executable(
         Path to save executable files.
     """
     output = os.path.join(execs, output)
-    sp.run([cmd, filename, lib, "-o", output])
+    sp.run([cmd, filename, "-static", lib, "-o", output, "-fPIC"])
 
 
 if __name__ == "__main__":
@@ -212,9 +212,9 @@ if __name__ == "__main__":
     root = updir(os.path.abspath(os.path.realpath(__file__)), 3)
     compiler = os.path.join(root, "bin", "ALAN")
     lib = os.path.join(root, "libs", "libalanstd.a")
-    opt = "opt-6.0"
-    llc = "llc-6.0"
-    linker = "clang-6.0"
+    opt = "opt"
+    llc = "llc"
+    linker = "clang"
     temp = os.path.join(root, "tmp")
     execs = os.path.join(root, "execs")
     os.makedirs(temp, exist_ok=True)
