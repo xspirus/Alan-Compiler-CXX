@@ -1,0 +1,7 @@
+version: "3.7"
+
+services:
+  compiler:
+    container_name: alan_compiler
+    hostname: alan
+    image: alan/ubuntu:18.04
