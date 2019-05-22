@@ -17,11 +17,14 @@ build-debug :
 lib :
 	@cmake --build build --target alanstd
 
-alan-release : build-release lib
+alan-release : build-release lib script
 	@cmake --build build --target ALAN
 
-alan-debug : build-debug lib
+alan-debug : build-debug lib script
 	@cmake --build build --target ALAN
+
+script:
+	@make -C alancxx
 
 clean :
 	@rm -rf build
